@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "435708067697",
+    "project_id": "badl-7d08e",
+    "storage_bucket": "badl-7d08e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435708067697:android:7f4182173caf3e7d7280d0",
+        "android_client_info": {
+          "package_name": "com.example.badl_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435708067697-gh3tuni1ql5lp0ll8llahnv2m3o010gi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX-rbf1PzR4HJ0HszCot1zCjFdGMTzqHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "435708067697-gh3tuni1ql5lp0ll8llahnv2m3o010gi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

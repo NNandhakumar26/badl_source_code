@@ -1,0 +1,1 @@
+1. Will display a disclaimer showing that the name entered willl not be uploaded into the database. (Useful for a proper report generation)

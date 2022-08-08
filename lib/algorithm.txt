@@ -1,0 +1,4 @@
+Get the user input and based on gender and age, remove the components that are not required.
+
+initialEliminationFunction
+    - 
