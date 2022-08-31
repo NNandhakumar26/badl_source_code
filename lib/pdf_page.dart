@@ -528,9 +528,6 @@ class PdfPage {
   }
 
   static double percentageCalculator({double value = 1, double length = 1}) {
-    // print(value);
-    // print('the length is $length');
-    // print((value / length));
     return value / length;
   }
 

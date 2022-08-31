@@ -50,34 +50,34 @@ class QuestionPage extends GetView<QuestionController> {
                                 ),
                               ),
                             ),
-                            ...controller.displayPreference.components?.map(
-                                  (Component component) {
-                                    return ComponentWidget(
-                                      e: component,
-                                      controller: controller,
-                                    );
-                                  },
-                                ) ??
-                                [SizedBox.shrink()],
+                            ...controller.displayComponents.map(
+                              (Component component) {
+                                return ComponentWidget(
+                                  e: component,
+                                  controller: controller,
+                                );
+                              },
+                            )
                           ],
                         ),
                       ),
                     ),
                     //CHECK THIS
-                    ...controller.subComponentList?.map(
-                          (SubComponent subcomponent) {
-                            return CustomDropDown(
+                    ...controller.displaySubcomponents.map(
+                      (SubComponent subcomponent) {
+                        return CustomDropDown(
+                          subcomponent,
+                          (response) {
+                            controller.updateSubcomponentResponse(
                               subcomponent,
-                              (string) {
-                                controller.updateSubComponentValue(
-                                  subcomponent,
-                                  string,
-                                );
-                              },
+                              response,
                             );
                           },
-                        ) ??
-                        [SizedBox.shrink()],
+                        );
+                      },
+                    )
+                    //  ??
+                    // [SizedBox.shrink()],
                   ],
                 ),
               ),
@@ -99,10 +99,11 @@ class QuestionPage extends GetView<QuestionController> {
         child: BouncingButton(
           voidCallback: () async {
             if (controller.formKey.currentState!.validate()) {
-              controller.tempChecking().then(
+              controller.updateResponse().then(
                 (value) {
                   if (value) {
-                    controller.refershData();
+                    controller.resetData();
+                    controller.calculateFinalScoring();
                     Get.off(
                       PDFViewPage(
                         userInput: controller.userInput,

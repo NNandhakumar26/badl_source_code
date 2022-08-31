@@ -9,7 +9,7 @@ class Network {
   static final doctors = instance.collection('Doctors');
 
   // add report
-  static Future<void> addReport(Map<String, dynamic> report) async {
+  static Future<void> addReportToDb(Map<String, dynamic> report) async {
     await reports.add(report).then(
       (value) async {
         String doctorName = await Local.getUserName();

@@ -106,7 +106,7 @@
 //               bool temp = controller.updateHeadingCounter();
 //               if (temp) {
 //                 var tempr = controller.userInput;
-//                 controller.refershData();
+//                 controller.resetData();
 //                 Get.offAll(
 //                   PDFViewPage(
 //                     userInput: tempr,

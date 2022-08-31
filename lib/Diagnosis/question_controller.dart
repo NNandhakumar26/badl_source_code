@@ -29,7 +29,7 @@ class QuestionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    refershData();
+    resetData();
     userInput = <String, dynamic>{};
   }
 
@@ -569,7 +569,7 @@ class QuestionController extends GetxController {
     ),
   };
 
-  void refershData() {
+  void resetData() {
     patientDetails = PatientDetails(userID: 'userID', age: 0, gender: 'Male');
     lessThan5 = false;
     hasOrthoProsthesis = false;
@@ -607,60 +607,85 @@ class QuestionController extends GetxController {
     }
   }
 
-  Set<SubComponent>? get subComponentList =>
-      updateSubComp() ?? displayPreference.subComponents!.toSet();
+  // List<Comoponen> get
+  List<Component> get displayComponents => displayPreference.components ?? [];
 
-  Future<bool> tempChecking() async {
+  Set<SubComponent> get displaySubcomponents {
+    Set<int> selectedComponentIds = {};
+    Set<SubComponent> returnValue = {};
+    for (var component in displayComponents)
+      if (component.isChecked) selectedComponentIds.add(component.id!);
+    for (var componentId in selectedComponentIds) {
+      for (var subcomponent in displaySubcomponents) {
+        if (subcomponent.ids!.contains(componentId))
+          returnValue.add(subcomponent);
+      }
+    }
+
+    return returnValue;
+  }
+
+  // Set<SubComponent>? get subComponentList =>
+  //     displaySubcomponents;
+  //  ?? displayPreference.subComponents!.toSet();
+
+  Future<bool> updateResponse() async {
     try {
       if (questionIndex < questions.entries.length) {
         preferenceIndex++;
         if (preferenceIndex < selectedQuestionSetValue.preferences!.length) {
-          print('entered');
+          update();
+          return false;
         } else {
-          removeNull(); //Removes the null components from the questionSet
-          addEntry();
+          addUserResponse();
+          // Check whether the current question is not the last question & also check whether it's criteria is null or not
           if ((nextQuestion.criteria != null) &&
               (nextQuestion != selectedQuestionSetValue)) {
-            await showDialog(
-              context: scaffoldKey.currentContext!,
-              barrierDismissible: false,
-              builder: (builder) => SuggestionWidget(
-                  title: nextQuestion.heading?.question ?? '',
-                  preferenceList: nextQuestion.preferences!),
-            ).then(
-              (value) {
-                questionIndex++;
-                selectedQuestionSetValue.preferences = value;
-                preferenceIndex = 0;
-                selectedQuestionSetValue.preferences!
-                    .removeWhere((element) => element.isSelected == false);
-              },
-            );
+            await preferencesSelectionWidget();
           } else {
             questionIndex++;
             preferenceIndex = 0;
           }
-          // break;
         }
       }
       update();
     } catch (e) {
       return true;
     }
-
     return false;
   }
 
-  void navigateTo() => Get.to(PdfPage());
+  Future<dynamic> preferencesSelectionWidget() {
+    return showDialog(
+      context: scaffoldKey.currentContext!,
+      barrierDismissible: false,
+      builder: (builder) => SuggestionWidget(
+          title: nextQuestion.heading?.question ?? '',
+          preferenceList: nextQuestion.preferences!),
+    ).then((preferenceList) {
+      questionIndex++;
+      selectedQuestionSetValue.preferences = preferenceList;
+      preferenceIndex = 0;
+      selectedQuestionSetValue.preferences!
+          .removeWhere((element) => element.isSelected == false);
+    });
+  }
 
-  void addEntry() => userInput.addEntries(
-        [
-          MapEntry(questions.entries.elementAt(questionIndex).key,
-              selectedQuestionSetValue)
-        ],
-      );
+  void addUserResponse() {
+    // Remove the components that are not selected
+    removeUnselectedComponents();
+    // add it to the user response
+    userInput.addEntries(
+      [
+        MapEntry(
+          displayTitle,
+          selectedQuestionSetValue,
+        )
+      ],
+    );
+  }
 
-  void removeNull() {
+  void removeUnselectedComponents() {
     for (var preference in selectedQuestionSetValue.preferences!) {
       if (preference.components != null) {
         preference.components!
@@ -671,52 +696,86 @@ class QuestionController extends GetxController {
     }
   }
 
-  Set<SubComponent>? updateSubComp() {
-    Set<SubComponent> subC = {};
+  // Set<SubComponent>? updateSubComp() {
+  //   Set<SubComponent> subC = {};
+  //   try {
+  //     List<Component> idList() {
+  //       print('Function working they are going height');
+  //       return displayPreference.components!
+  //           .where((element) => element.isChecked)
+  //           .toList();
+  //     }
+  //     var temp = idList();
+  //     for (var component in temp) {
+  //       print(temp);
+  //       for (var subcomponent in displayPreference.subComponents!) {
+  //         if (subcomponent.ids!.contains(component.id)) {
+  //           subC.add(subcomponent);
+  //         }
+  //       }
+  //     }
+  //     return subC;
+  //   } catch (e) {
+  //     if (displayPreference.components == null) {
+  //       return displayPreference.subComponents!.toSet();
+  //     } else {}
+  //     return {};
+  //   }
+  // }
 
-    try {
-      List<Component> idList() {
-        print('Function working');
-        return displayPreference.components!
-            .where((element) => element.isChecked)
-            .toList();
-      }
-
-      var temp = idList();
-
-      for (var component in temp) {
-        print(temp);
-        for (var subcomponent in displayPreference.subComponents!) {
-          if (subcomponent.ids!.contains(component.id)) {
-            subC.add(subcomponent);
-          }
-        }
-      }
-
-      return subC;
-    } catch (e) {
-      if (displayPreference.components == null) {
-        return displayPreference.subComponents!.toSet();
-      } else {}
-      return {};
-    }
-  }
-
-  void updateSubComponentValue(
+  void updateSubcomponentResponse(
     SubComponent subComponents,
     String value,
   ) {
-    for (var subcomponent in displayPreference.subComponents!) {
-      if (subcomponent.value == subComponents.value) {
-        subcomponent.response = value;
-        break;
-      }
-    }
+    displaySubcomponents
+        .firstWhere((element) => element.value == value)
+        .response = value;
+
+    // TODO: New Update
+    // for (var subcomponent in displaySubcomponents) {
+    //   if (subcomponent.value == subComponents.value) {
+    //     subcomponent.response = value;
+    //     break;
+    //   }
+    // }
     update();
   }
 
-  void updateUserInfo({required String key, required dynamic value}) async {
+  void calculateFinalScoring(
+      {required String key, required dynamic value}) async {
     print('Before Updation ${userInput}');
+    for (var userInput in userInput.entries) {
+      if (userInput.key == 'patientDetails') return;
+      QuestionSet questionSet = userInput.value;
+      // TODO: Check whether to make it nullable and work with non-null condition
+      Heading heading = questionSet.heading!;
+      Scoring scoring = heading.scoring!;
+      List<Preference> preferenceList = questionSet.preferences!;
+
+      // TODO: FUTURE: make a getter for the scoring within the question set itself
+
+      for (var preference in preferenceList) {
+        for (var subcomponent in preference.subComponents!) {
+          switch (subcomponent.response) {
+            case 'Dependent':
+              scoring.dependent++;
+              break;
+            case 'Independent':
+              scoring.independent++;
+              break;
+            case 'Needs Assistance':
+              scoring.partiallyDependent++;
+              break;
+            case 'Not Applicable':
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }
+    return;
+
     QuestionSet questionSet = QuestionSet();
     if (value.runtimeType == QuestionSet) {
       value as QuestionSet;

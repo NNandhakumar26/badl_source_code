@@ -58,31 +58,35 @@ class _SuggestionWidgetState extends State<SuggestionWidget> {
               ),
             )
             .toList(),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 48,
-            vertical: 8,
-          ),
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              bool value = false;
-              for (var item in widget.preferenceList) {
-                if (item.isSelected == true) {
-                  value = true;
-                }
-              }
-              if (value) {
-                Navigator.pop(context, widget.preferenceList);
-              }
-            },
-            label: Text(
-              'Done',
-              style: Style.button,
-            ),
-            backgroundColor: Style.nearlyDarkBlue.withOpacity(0.87),
-          ),
-        ),
+        doneButton(context),
       ],
+    );
+  }
+
+  Widget doneButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 48,
+        vertical: 8,
+      ),
+      child: FloatingActionButton.extended(
+        onPressed: () {
+          bool value = false;
+          for (var item in widget.preferenceList) {
+            if (item.isSelected == true) {
+              value = true;
+            }
+          }
+          if (value) {
+            Navigator.pop(context, widget.preferenceList);
+          }
+        },
+        label: Text(
+          'Done',
+          style: Style.button,
+        ),
+        backgroundColor: Style.nearlyDarkBlue.withOpacity(0.87),
+      ),
     );
   }
 }

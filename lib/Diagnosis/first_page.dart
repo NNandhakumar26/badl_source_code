@@ -249,7 +249,7 @@ class FirstPage extends GetView<QuestionController> {
                                     //         controller.listOfCategories[
                                     //             controller.currentIndex]]!);
 
-                                    // controller.tempChecking();
+                                    // controller.updateResponse();
 
                                     Get.to(QuestionPage());
                                     // Get.to(

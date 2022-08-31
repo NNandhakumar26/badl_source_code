@@ -554,11 +554,11 @@
 //   @override
 //   void onInit() {
 //     super.onInit();
-//     refershData();
+//     resetData();
 //     userInput = <String, dynamic>{};
 //   }
 
-//   void refershData() {
+//   void resetData() {
 //     currentIndex = 0;
 //     currentPreferenceIndex = 0;
 //     details = PatientDetails(userID: 'userID', age: 0, gender: 'Male');
@@ -620,7 +620,7 @@
 //     update();
 //   }
 
-//   void tempChecking() {
+//   void updateResponse() {
 //     for (var questionSet in questions.entries) {
 //       for (var preference in questionSet.value.preferences!) {
 //         print(preference);
