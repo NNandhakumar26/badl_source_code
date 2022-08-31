@@ -1,4 +1,4 @@
-// import 'package:badl_app/Modals/preference.dart';
+// import 'package:badl_app/modals/preference.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 // import 'package:get/get.dart';

@@ -3,7 +3,7 @@
 // import 'package:badl_app/Diagnosis/bouncing_widget.dart';
 // import 'package:badl_app/Diagnosis/pdf_view_page.dart';
 // import 'package:badl_app/Diagnosis/question_controller.dart';
-// import 'package:badl_app/Modals/preference.dart';
+// import 'package:badl_app/modals/preference.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 
@@ -32,7 +32,7 @@
 //                       FadeIn(
 //                         delay: Duration(milliseconds: 200),
 //                         duration: Duration(milliseconds: 500),
-//                         child: ThisPageCardDecoration(
+//                         child: CustomCardWidget(
 //                           widget: Column(
 //                             children: [
 //                               //TODO: Including the heading from preference heading...
@@ -52,7 +52,7 @@
 
 //                               ...controller.currentPreference!.components!.map(
 //                                 (Component e) {
-//                                   return ComponentContainer(
+//                                   return ComponentWidget(
 //                                     e: e,
 //                                     controller: controller,
 //                                   );
@@ -122,9 +122,9 @@
 //   }
 // }
 
-// class ThisPageCardDecoration extends StatelessWidget {
+// class CustomCardWidget extends StatelessWidget {
 //   final Widget widget;
-//   const ThisPageCardDecoration({
+//   const CustomCardWidget({
 //     Key? key,
 //     required this.widget,
 //   }) : super(key: key);
@@ -195,11 +195,11 @@
 //   }
 // }
 
-// class ComponentContainer extends StatelessWidget {
+// class ComponentWidget extends StatelessWidget {
 //   final Component? e;
 //   final QuestionController? controller;
 
-//   ComponentContainer({this.e, this.controller, Key? key}) : super(key: key);
+//   ComponentWidget({this.e, this.controller, Key? key}) : super(key: key);
 
 //   @override
 //   Widget build(BuildContext context) {

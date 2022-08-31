@@ -1,8 +1,8 @@
-// import 'package:badl_app/Modals/condition.dart';
-// import 'package:badl_app/Modals/heading.dart';
-// import 'package:badl_app/Modals/patientInfo.dart';
-// import 'package:badl_app/Modals/preference.dart';
-// import 'package:badl_app/Modals/question_set.dart';
+// import 'package:badl_app/modals/condition.dart';
+// import 'package:badl_app/modals/heading.dart';
+// import 'package:badl_app/modals/patientInfo.dart';
+// import 'package:badl_app/modals/preference.dart';
+// import 'package:badl_app/modals/question_set.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:get/get.dart';
 

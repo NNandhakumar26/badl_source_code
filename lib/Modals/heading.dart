@@ -1,4 +1,4 @@
-import 'package:badl_app/Modals/preference.dart';
+import 'package:badl_app/modals/preference.dart';
 import 'dart:convert';
 
 Heading headingFromJson(String str) => Heading.fromJson(json.decode(str));

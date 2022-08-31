@@ -1,10 +1,10 @@
-import 'package:badl_app/Modals/condition.dart';
-import 'package:badl_app/Modals/heading.dart';
-import 'package:badl_app/Modals/patientInfo.dart';
-import 'package:badl_app/Modals/preference.dart';
-import 'package:badl_app/Modals/question_set.dart';
+import 'package:badl_app/diagnosis/suggestion_widget.dart';
+import 'package:badl_app/modals/condition.dart';
+import 'package:badl_app/modals/heading.dart';
+import 'package:badl_app/modals/patientInfo.dart';
+import 'package:badl_app/modals/preference.dart';
+import 'package:badl_app/modals/question_set.dart';
 import 'package:badl_app/pdf_page.dart';
-import 'package:badl_app/style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,8 +20,11 @@ class QuestionController extends GetxController {
   late Map<String, dynamic> userInput;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  PatientDetails details =
-      PatientDetails(userID: 'userID', age: 0, gender: 'Male');
+  PatientDetails patientDetails = PatientDetails(
+    userID: 'userID',
+    age: 0,
+    gender: 'Male',
+  );
 
   @override
   void onInit() {
@@ -567,73 +570,41 @@ class QuestionController extends GetxController {
   };
 
   void refershData() {
-    details = PatientDetails(userID: 'userID', age: 0, gender: 'Male');
+    patientDetails = PatientDetails(userID: 'userID', age: 0, gender: 'Male');
     lessThan5 = false;
     hasOrthoProsthesis = false;
-    tempQuestionIndex = 0;
-    tempPreferenceIndex = 0;
+    questionIndex = 0;
+    preferenceIndex = 0;
   }
 
-  int tempQuestionIndex = 0;
-  int tempPreferenceIndex = 0;
+  int questionIndex = 0;
+  int preferenceIndex = 0;
 
-  String get displayQuestion => currentQuestion.heading!.question ?? '';
+  QuestionSet get selectedQuestionSetValue =>
+      (questions.entries.elementAt(questionIndex).value);
 
-  QuestionSet get currentQuestion =>
-      (questions.entries.elementAt(tempQuestionIndex).value);
+  QuestionSet get nextQuestion => (questionIndex < questions.entries.length)
+      ? (questions.entries.elementAt(questionIndex + 1).value)
+      : selectedQuestionSetValue;
 
-  QuestionSet get nextQuestion => (tempQuestionIndex < questions.entries.length)
-      ? (questions.entries.elementAt(tempQuestionIndex + 1).value)
-      : currentQuestion;
+  // ** Values Used for the UI **
+  String get displayTitle => questions.entries.elementAt(questionIndex).key;
 
-  String get currentTitle => questions.entries.elementAt(tempQuestionIndex).key;
-
-  // function to check whether is in between a range
-  bool isInRange(int value, int min, int max) => value >= min && value <= max;
-
-  String isMaletoString(bool value) => (value) ? 'Male' : 'Female';
-
-  bool stringToIsMale(String value) => (value == 'Male') ? true : false;
-
-  // function to check whether it is male or female
-  //Null represents  applicable for both male and female
-  bool isSameGender(bool? isMale) => (isMale == null)
-      ? true
-      : ((isMaletoString(isMale)) == gender)
-          ? true
-          : false;
+  String get displayQuestion =>
+      selectedQuestionSetValue.heading!.question ?? '';
 
   Preference get displayPreference {
     try {
       return (questions.entries
-          .elementAt(tempQuestionIndex)
+          .elementAt(questionIndex)
           .value
-          .preferences![tempPreferenceIndex]);
+          .preferences![preferenceIndex]);
     } catch (e) {
       return (questions.entries
-          .elementAt(tempQuestionIndex)
+          .elementAt(questionIndex)
           .value
-          .preferences![tempPreferenceIndex - 1]);
+          .preferences![preferenceIndex - 1]);
     }
-  }
-
-  void initialEliminationFunction({required int age, required bool isMale}) {
-    questions.entries.forEach(
-      (questionSet) {
-        questionSet.value.preferences!.forEach(
-          (preference) {
-            preference.subComponents!.removeWhere(
-              (subComponent) => !(isInRange(
-                    age,
-                    subComponent.minAge,
-                    subComponent.maxAge,
-                  ) &&
-                  (isSameGender(subComponent.isMale))),
-            );
-          },
-        );
-      },
-    );
   }
 
   Set<SubComponent>? get subComponentList =>
@@ -641,15 +612,15 @@ class QuestionController extends GetxController {
 
   Future<bool> tempChecking() async {
     try {
-      if (tempQuestionIndex < questions.entries.length) {
-        tempPreferenceIndex++;
-        if (tempPreferenceIndex < currentQuestion.preferences!.length) {
+      if (questionIndex < questions.entries.length) {
+        preferenceIndex++;
+        if (preferenceIndex < selectedQuestionSetValue.preferences!.length) {
           print('entered');
         } else {
           removeNull(); //Removes the null components from the questionSet
           addEntry();
           if ((nextQuestion.criteria != null) &&
-              (nextQuestion != currentQuestion)) {
+              (nextQuestion != selectedQuestionSetValue)) {
             await showDialog(
               context: scaffoldKey.currentContext!,
               barrierDismissible: false,
@@ -658,16 +629,16 @@ class QuestionController extends GetxController {
                   preferenceList: nextQuestion.preferences!),
             ).then(
               (value) {
-                tempQuestionIndex++;
-                currentQuestion.preferences = value;
-                tempPreferenceIndex = 0;
-                currentQuestion.preferences!
+                questionIndex++;
+                selectedQuestionSetValue.preferences = value;
+                preferenceIndex = 0;
+                selectedQuestionSetValue.preferences!
                     .removeWhere((element) => element.isSelected == false);
               },
             );
           } else {
-            tempQuestionIndex++;
-            tempPreferenceIndex = 0;
+            questionIndex++;
+            preferenceIndex = 0;
           }
           // break;
         }
@@ -684,13 +655,13 @@ class QuestionController extends GetxController {
 
   void addEntry() => userInput.addEntries(
         [
-          MapEntry(questions.entries.elementAt(tempQuestionIndex).key,
-              currentQuestion)
+          MapEntry(questions.entries.elementAt(questionIndex).key,
+              selectedQuestionSetValue)
         ],
       );
 
   void removeNull() {
-    for (var preference in currentQuestion.preferences!) {
+    for (var preference in selectedQuestionSetValue.preferences!) {
       if (preference.components != null) {
         preference.components!
             .removeWhere((element) => (element.isChecked == false));
@@ -729,22 +700,6 @@ class QuestionController extends GetxController {
       } else {}
       return {};
     }
-  }
-
-  selectGender(String value) {
-    gender = value;
-    update();
-  }
-
-  selectOrthosesOrProtheses(String value) {
-    if (value == 'No') {
-      hasOrthoProsthesis = false;
-    } else {
-      hasOrthoProsthesis = true;
-    }
-    selectOrthoses = value;
-
-    update();
   }
 
   void updateSubComponentValue(
@@ -819,89 +774,55 @@ class QuestionController extends GetxController {
     }
     print('After Updation ${userInput}');
   }
-}
 
-class SuggestionWidget extends StatefulWidget {
-  final String title;
-  final List<Preference> preferenceList;
-  const SuggestionWidget(
-      {Key? key, required this.title, required this.preferenceList})
-      : super(key: key);
+  // function to check whether is in between a range
+  bool isInRange(int value, int min, int max) => value >= min && value <= max;
 
-  @override
-  State<SuggestionWidget> createState() => _SuggestionWidgetState();
-}
+  String isMaletoString(bool value) => (value) ? 'Male' : 'Female';
 
-class _SuggestionWidgetState extends State<SuggestionWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return SimpleDialog(
-      title: Column(
-        children: [
-          Text(
-            widget.title,
-            style: Theme.of(context).textTheme.headline6!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-          ),
-          SizedBox(
-            height: 4,
-          ),
-          Text(
-            'Select The Appropriate Ones',
-            style: Theme.of(context).textTheme.caption!.copyWith(
-                  fontSize: 10,
-                ),
-          ),
-        ],
-      ),
-      children: [
-        ...widget.preferenceList
-            .map(
-              (e) => CheckboxListTile(
-                value: e.isSelected,
-                activeColor: Style.nearlyDarkBlue,
-                onChanged: (value) {
-                  widget.preferenceList[widget.preferenceList.indexOf(e)]
-                      .isSelected = value ?? false;
-                  setState(() {});
-                },
-                title: Text(
-                  e.question ?? '',
-                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                        color: Colors.black.withOpacity(0.60),
-                        fontSize: 14,
-                      ),
-                ),
-              ),
-            )
-            .toList(),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 48,
-            vertical: 8,
-          ),
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              bool value = false;
-              for (var item in widget.preferenceList) {
-                if (item.isSelected == true) {
-                  value = true;
-                }
-              }
-              if (value) {
-                Navigator.pop(context, widget.preferenceList);
-              }
-            },
-            label: Text(
-              'Done',
-              style: Style.button,
-            ),
-            backgroundColor: Style.nearlyDarkBlue.withOpacity(0.87),
-          ),
-        ),
-      ],
+  bool stringToIsMale(String value) => (value == 'Male') ? true : false;
+
+  // function to check whether it is male or female
+  //Null represents  applicable for both male and female
+  bool isSameGender(bool? isMale) => (isMale == null)
+      ? true
+      : ((isMaletoString(isMale)) == gender)
+          ? true
+          : false;
+
+  void initialEliminationFunction({required int age, required bool isMale}) {
+    questions.entries.forEach(
+      (questionSet) {
+        questionSet.value.preferences!.forEach(
+          (preference) {
+            // TODO: Check the working at last.. I guess || symbol should be used instead of &&
+            preference.subComponents!.removeWhere(
+              (subComponent) => !(isInRange(
+                    age,
+                    subComponent.minAge,
+                    subComponent.maxAge,
+                  ) &&
+                  (isSameGender(subComponent.isMale))),
+            );
+          },
+        );
+      },
     );
+  }
+
+  selectGender(String value) {
+    gender = value;
+    update();
+  }
+
+  selectOrthosesOrProtheses(String value) {
+    if (value == 'No') {
+      hasOrthoProsthesis = false;
+    } else {
+      hasOrthoProsthesis = true;
+    }
+    selectOrthoses = value;
+
+    update();
   }
 }

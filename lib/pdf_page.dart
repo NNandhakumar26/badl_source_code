@@ -1,6 +1,6 @@
-import 'package:badl_app/Modals/patientInfo.dart';
-import 'package:badl_app/Modals/preference.dart';
-import 'package:badl_app/Modals/question_set.dart';
+import 'package:badl_app/modals/patientInfo.dart';
+import 'package:badl_app/modals/preference.dart';
+import 'package:badl_app/modals/question_set.dart';
 import 'package:badl_app/network/shared_pereference.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;

@@ -1,5 +1,5 @@
-import 'package:badl_app/Modals/condition.dart';
-import 'package:badl_app/Modals/preference.dart';
+import 'package:badl_app/modals/condition.dart';
+import 'package:badl_app/modals/preference.dart';
 
 import 'heading.dart';
 

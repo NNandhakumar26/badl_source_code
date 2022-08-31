@@ -1,4 +1,4 @@
-import 'package:badl_app/Modals/user.dart';
+import 'package:badl_app/modals/user.dart';
 import 'package:badl_app/network/shared_pereference.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
