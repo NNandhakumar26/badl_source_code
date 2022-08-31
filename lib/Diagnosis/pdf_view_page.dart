@@ -15,7 +15,7 @@ class PDFViewPage extends StatelessWidget {
   PDFViewPage({required this.userInput});
 
   Future<dynamic> addUser() async {
-    Network.addReport(userInput.map(
+    Network.addReportToDb(userInput.map(
         (key, value) => MapEntry(key, (value != null) ? value.toJson() : '')));
 
     var temp;

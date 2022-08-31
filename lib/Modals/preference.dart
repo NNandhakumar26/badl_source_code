@@ -56,18 +56,25 @@ class Preference {
 
 class Scoring {
   double? total;
-  double? dependent;
-  double? partiallyDependent;
-  double? independent;
-  double? notApplicable;
+  int dependent;
+  int partiallyDependent;
+  int independent;
+  // int? notApplicable;
 
   Scoring({
     this.total,
-    this.dependent = 1,
-    this.partiallyDependent = 2,
-    this.independent = 3,
-    this.notApplicable = 0,
+    this.dependent = 0,
+    this.partiallyDependent = 0,
+    this.independent = 0,
+    // this.notApplicable = 0,
   });
+
+  double get relativeDependent => 0.0;
+
+  int get totalCount => dependent + independent + partiallyDependent;
+  double get dependentPercent => (dependent / totalCount) * 100;
+  double get independentPercent => (independent / totalCount) * 100;
+  double get partialPercent => (partialPercent / totalCount) * 100;
 
   Map<String, dynamic> toMap() {
     return {
@@ -83,7 +90,7 @@ class Scoring {
         dependent: json["dependent"],
         partiallyDependent: json["partiallyDependent"],
         independent: json["independent"],
-        notApplicable: json["notApplicable"],
+        // notApplicable: json["notApplicable"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -91,7 +98,7 @@ class Scoring {
         "dependent": dependent,
         "partiallyDependent": partiallyDependent,
         "independent": independent,
-        "notApplicable": notApplicable,
+        // "notApplicable": notApplicable,
       };
 }
 
