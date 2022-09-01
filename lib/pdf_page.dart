@@ -112,8 +112,8 @@ class PdfPage {
                   ),
                 ],
               ),
-              buildPatientInfo(details: data['patientDetails']),
-              buildSignature(
+              patientDetailsWidget(details: data['patientDetails']),
+              signatureWidget(
                 context,
                 name: name,
                 designation: designation,
@@ -127,6 +127,11 @@ class PdfPage {
     for (var entry in data.entries) {
       if (entry.value.runtimeType == QuestionSet) {
         Scoring scoring = entry.value.heading!.scoring!;
+        print('object');
+        print(scoring.dependentPercent);
+        print(scoring.independent);
+        print(scoring.partiallyDependent);
+        print('object');
         List<Preference> preferences = entry.value.preferences;
         doc.addPage(
           pw.Page(
@@ -142,11 +147,9 @@ class PdfPage {
                     title: entry.value.heading?.question ?? '',
                   ),
                 ),
-                buildScores(
+                scoreWidget(
                   context,
                   scoring: scoring,
-                  // length: subComponentLength(entry.value),
-                  total: scoring.total ?? 0,
                   relativeScore: scoring.relativeScore,
                 ),
               ],
@@ -177,20 +180,6 @@ class PdfPage {
                   ],
                 ),
               );
-              // return pw.Container(
-              //     alignment: pw.Alignment.centerRight,
-              //     margin:
-              //         const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-              //     padding:
-              //         const pw.EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-              //     decoration: const pw.BoxDecoration(
-              //         border: pw.Border(
-              //             bottom: pw.BorderSide(
-              //                 width: 0.5, color: PdfColors.grey))),
-              //     child: pw.Text('Portable Document Format',
-              //         style: pw.Theme.of(context)
-              //             .defaultTextStyle
-              //             .copyWith(color: PdfColors.grey)));
             },
             footer: (pw.Context context) {
               return pw.Container(
@@ -218,16 +207,7 @@ class PdfPage {
     return doc.save();
   }
 
-  static pw.Container buildPatientInfo({PatientDetails? details}) {
-    // details = PatientDetails(
-    //     userID: 'userID',
-    //     age: 3,
-    //     months: 5,
-    //     gender: "Male",
-    //     anyOrthosesOrProstheses: true,
-    //     nameOfTheDevice: 'Device',
-    //     diagnosis: 'Thermometer');
-
+  static pw.Container patientDetailsWidget({PatientDetails? details}) {
     return pw.Container(
       color: PdfColors.grey300,
       padding: const pw.EdgeInsets.symmetric(
@@ -306,8 +286,6 @@ class PdfPage {
     pw.TextStyle? titleStyle,
     bool unite = false,
   }) {
-    final style = titleStyle ?? pw.TextStyle(fontWeight: pw.FontWeight.bold);
-
     return pw.Container(
       width: width,
       padding: pw.EdgeInsets.all(6),
@@ -437,26 +415,11 @@ class PdfPage {
     );
   }
 
-  static buildScores(context,
-      {scoring,
-      double length = 1,
-      double total = 0,
-      required double relativeScore}) {
-    // double calculation() {
-    //   var dependent = percentageCalculator(
-    //     value: scoring?.dependent ?? 0,
-    //     length: length,
-    //   );
-    //   var partiallyDependent = percentageCalculator(
-    //     value: scoring?.partiallyDependent ?? 0,
-    //     length: length,
-    //   );
-
-    //   double temp = ((total * dependent) / 100) +
-    //       (((total * partiallyDependent) / 100) / 2);
-    //   return temp * 100;
-    // }
-
+  static scoreWidget(
+    context, {
+    required Scoring scoring,
+    required double relativeScore,
+  }) {
     return pw.Center(
       child: pw.Container(
         decoration: pw.BoxDecoration(
@@ -478,7 +441,7 @@ class PdfPage {
                 color: PdfColors.white,
               ),
               child: pw.Text(
-                'Total Score  :  ${relativeScore.toStringAsFixed(2)} / ${total.toStringAsFixed(2)}',
+                'Total Score  :  ${relativeScore.toStringAsFixed(2)} / ${scoring.total!.toStringAsFixed(2)}',
                 style: pw.Theme.of(context).defaultTextStyle.copyWith(
                       fontWeight: pw.FontWeight.bold,
                     ),
@@ -490,26 +453,17 @@ class PdfPage {
                 children: [
                   linearProgressIndicator(
                     context,
-                    value: percentageCalculator(
-                      value: scoring?.dependent ?? 0,
-                      length: length,
-                    ),
+                    value: scoring.dependentPercent,
                     text: 'Dependent',
                   ),
                   linearProgressIndicator(
                     context,
-                    value: percentageCalculator(
-                      value: scoring?.partiallyDependent ?? 0,
-                      length: length,
-                    ),
+                    value: scoring.partialPercent,
                     text: 'Partially Dependent',
                   ),
                   linearProgressIndicator(
                     context,
-                    value: percentageCalculator(
-                      value: scoring?.independent ?? 0,
-                      length: length,
-                    ),
+                    value: scoring.independentPercent,
                     text: 'Independent',
                   ),
                 ],
@@ -521,35 +475,17 @@ class PdfPage {
     );
   }
 
-  static double subComponentLength(QuestionSet questionSet) {
-    double value = 0;
-    questionSet.preferences.map((e) => e.subComponents!.map((sub) => ++value));
-    for (var preference in questionSet.preferences) {
-      for (var sub in preference.subComponents!) {
-        value++;
-      }
-    }
-    // TODO: NOTE HEre
-    return value;
-    // return value - questionSet.heading!.scoring!.notApplicable!.toDouble();
-  }
-
-  static double percentageCalculator({int value = 1, double length = 1}) {
-    return value / length;
-  }
-
   static pw.Widget linearProgressIndicator(context,
-      {double value = 0.6, String text = ''}) {
+      {double value = 0.0, String text = ''}) {
     return pw.Expanded(
       child: pw.Container(
-        // width: double.infinity,
         alignment: pw.Alignment.topCenter,
         margin: pw.EdgeInsets.only(top: 20),
         padding: pw.EdgeInsets.symmetric(horizontal: 16),
         child: pw.Column(
           children: [
             pw.Text(
-              '${((value * 100).toStringAsFixed(1))}% ',
+              '${value.toStringAsFixed(2)}%',
               textScaleFactor: 1.24,
               style: pw.Theme.of(context).defaultTextStyle.copyWith(
                     fontWeight: pw.FontWeight.bold,
@@ -558,7 +494,7 @@ class PdfPage {
             pw.Padding(
               padding: const pw.EdgeInsets.symmetric(vertical: 8),
               child: pw.LinearProgressIndicator(
-                value: value,
+                value: value / 100,
                 backgroundColor: PdfColors.grey300,
                 valueColor: PdfColors.grey700,
               ),
@@ -570,7 +506,7 @@ class PdfPage {
     );
   }
 
-  static pw.Widget buildSignature(context,
+  static pw.Widget signatureWidget(context,
       {required String name, required String designation}) {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.end,

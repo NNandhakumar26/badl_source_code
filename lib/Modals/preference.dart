@@ -78,7 +78,7 @@ class Scoring {
   int get totalCount => dependent + independent + partiallyDependent;
   double get dependentPercent => (dependent / totalCount) * 100;
   double get independentPercent => (independent / totalCount) * 100;
-  double get partialPercent => (partialPercent / totalCount) * 100;
+  double get partialPercent => (partiallyDependent / totalCount) * 100;
 
   Map<String, dynamic> toMap() {
     return {

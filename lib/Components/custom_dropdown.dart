@@ -29,6 +29,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
     return SizedBox(
       width: Get.width,
       child: Card(
+        elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(2),
         ),
@@ -61,14 +62,6 @@ class _CustomDropDownState extends State<CustomDropDown> {
                     padding: EdgeInsets.symmetric(
                       horizontal: 3,
                     ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        // color: Colors.blueGrey.shade600,
-                        color: Style.nearlyDarkBlue.withOpacity(0.8),
-                        width: 0.32,
-                      ),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
                     child: DropdownButtonFormField<String>(
                       iconEnabledColor: Style.nearlyDarkBlue.withOpacity(0.87),
                       style: Style.overline.copyWith(
@@ -92,21 +85,19 @@ class _CustomDropDownState extends State<CustomDropDown> {
                       isExpanded: true,
                       validator: (value) =>
                           value == null ? 'Cannot Be Null' : null,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                      items: itemsList.map(
-                        (String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              overflow: TextOverflow.fade,
-                              softWrap: false,
+                      decoration: dropdownDecoration(),
+                      items: itemsList
+                          .map(
+                            (String value) => DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                              ),
                             ),
-                          );
-                        },
-                      ).toList(),
+                          )
+                          .toList(),
                       onChanged: widget.voidCallBack,
                     ),
                   ),
@@ -114,6 +105,39 @@ class _CustomDropDownState extends State<CustomDropDown> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration dropdownDecoration() {
+    return InputDecoration(
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(2),
+        borderSide: BorderSide(
+          color: Style.nearlyDarkBlue.withOpacity(0.8),
+          width: 0.32,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(2),
+        borderSide: BorderSide(
+          color: Colors.red.shade800,
+          width: 0.60,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(2),
+        borderSide: BorderSide(
+          color: Style.nearlyDarkBlue,
+          width: 0.60,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(2),
+        borderSide: BorderSide(
+          color: Style.nearlyDarkBlue,
+          width: 0.60,
         ),
       ),
     );

@@ -220,6 +220,49 @@ class Style {
             ),
     );
   }
+
+  static navigate(BuildContext context, Widget widget) {
+    return Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return widget;
+        },
+        transitionsBuilder:
+            (___, Animation<double> animation, ____, Widget child) {
+          return SlideTransition(
+            position: Tween(
+                    begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
+                .animate(animation),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
+    );
+  }
+
+  static navigateBack(BuildContext context, Widget widget) {
+    return Navigator.push(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return widget;
+        },
+        transitionsBuilder:
+            (___, Animation<double> animation, ____, Widget child) {
+          return SlideTransition(
+            position: Tween(
+                    begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
+                .animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
 }
 
 class CustomLoadingDialog extends StatelessWidget {

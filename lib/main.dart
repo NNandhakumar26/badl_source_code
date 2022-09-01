@@ -30,7 +30,7 @@ Future<void> main() async {
       ),
       home: CustomFutureBuilder<bool>(
         onSuccessWidget: (value) {
-          if (!value) {
+          if (value) {
             return FirstPage();
           } else {
             return LoginPage();
