@@ -4,7 +4,6 @@ import 'package:badl_app/modals/heading.dart';
 import 'package:badl_app/modals/patientInfo.dart';
 import 'package:badl_app/modals/preference.dart';
 import 'package:badl_app/modals/question_set.dart';
-import 'package:badl_app/pdf_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,6 +24,9 @@ class QuestionController extends GetxController {
     age: 0,
     gender: 'Male',
   );
+
+  int questionIndex = 0;
+  int preferenceIndex = 0;
 
   @override
   void onInit() {
@@ -87,154 +89,157 @@ class QuestionController extends GetxController {
         ),
       ],
     ),
-    "Bathing": QuestionSet(
-      heading: Heading(
-        question: 'Bathing',
-        scoring: Scoring(
-          total: 0.15,
-        ),
-      ),
-      preferences: [
-        Preference(
-          question: 'How do you prefer to take a bath regularly',
-          components: [
-            Component(
-              id: 1,
-              value:
-                  'Open Space (motor pump sets, backyard, water resources such as lake)',
-            ),
-            Component(
-              id: 2,
-              value: 'Bathroom using bucket and mug',
-            ),
-            Component(
-              id: 3,
-              value: 'Shower',
-            ),
-            Component(
-              id: 4,
-              value: 'Tub',
-            ),
-          ],
-          subComponents: [
-            SubComponent(
-                ids: [1, 2, 3, 4], value: 'Able to access the dress/towel'),
-            SubComponent(
-                ids: [2, 3, 4],
-                value: 'hang the towel and clothes in the hanging bar'),
-            SubComponent(
-                ids: [2, 3, 4],
-                value:
-                    'adjust the tap with the temperature needed (hot or cold )'),
-            SubComponent(
-                ids: [2, 3, 4],
-                value: 'Able to open and close the tap/ shower'),
-            SubComponent(
-                ids: [1, 2, 3, 4],
-                value: 'Able to apply soap, shampoo and conditioner '),
-            SubComponent(
-                ids: [1, 2, 3, 4],
-                value: 'Able to operate electrical appliances '),
-            SubComponent(
-                ids: [1, 2, 3, 4], value: 'Able to take shower and clean hair'),
-            SubComponent(
-                ids: [1, 2, 3, 4],
-                value: 'apply soap completely throughout the bod'),
-            SubComponent(
-                ids: [1, 2, 3, 4],
-                value: 'use bathing brush and clean the whole body'),
-            SubComponent(
-                ids: [1, 2, 3, 4],
-                value: 'replace the soap , shampoo and conditioner'),
-            SubComponent(
-                ids: [1, 2, 3, 4], value: 'wipe your whole body with towel '),
-            SubComponent(ids: [4], value: 'able to get into the tub'),
-            SubComponent(ids: [1], value: 'able to get into pond'),
-          ],
-        )
-      ],
-    ),
-    "Mobility": QuestionSet(
-      heading: Heading(
-        question: 'Mobility',
-        scoring: Scoring(
-          total: 0.15,
-        ),
-      ),
-      preferences: [
-        Preference(
-          question: 'How do you prefer to take a bath regularly',
-          subComponents: [
-            SubComponent(
-                ids: [1], value: 'Able to getup from lying to sitting'),
-            SubComponent(
-                ids: [1], value: 'Able to get back from sitting to lying'),
-            SubComponent(
-                ids: [1], value: 'Able to getup from sitting to standing'),
-            SubComponent(
-                ids: [1], value: 'Able to get back from standing to sitting'),
-            SubComponent(
-                ids: [1], value: 'Able to perform standing to walking'),
-            SubComponent(ids: [1], value: 'Able to get back from walking'),
-            SubComponent(ids: [1], value: 'Able to bend'),
-            SubComponent(ids: [1], value: 'Reaching out for objects'),
-          ],
-        ),
-      ],
-    ),
-    "Toileting": QuestionSet(
-      heading: Heading(
-        question: 'Toileting',
-        scoring: Scoring(
-          total: 0.15,
-        ),
-      ),
-      preferences: [
-        Preference(
-          question: 'Bowel/Bladder Control',
-          components: [
-            Component(
-              id: 1,
-              value: 'Indian Commode',
-            ),
-            Component(
-              id: 2,
-              value: 'Western Commode',
-            ),
-          ],
-          subComponents: [
-            SubComponent(ids: [1, 2], value: 'Clean the Commode'),
-            SubComponent(ids: [1], value: 'Sit properly on the commode Squat'),
-            SubComponent(
-                ids: [1, 2],
-                value: 'Can clean himself using water gun / mug and water'),
-            SubComponent(
-                ids: [1],
-                value:
-                    'Able to flush/ pour water  and waits till the commode is clean'),
-            SubComponent(ids: [1, 2], value: 'Wash the hands and legs'),
-            SubComponent(ids: [1], value: 'Maintain squat posture till voids'),
-            SubComponent(ids: [1], value: 'Ability to squat to stand'),
-            SubComponent(
-              ids: [2],
-              value: 'Sit properly on the commode sitting',
-            ),
-            SubComponent(
-              ids: [2],
-              value: 'Able to flush and waits till the commode is clean',
-            ),
-            SubComponent(
-              ids: [2],
-              value: 'Maintain sitting posture till voids',
-            ),
-            SubComponent(
-              ids: [2],
-              value: 'Ability to sit to stand',
-            ),
-          ],
-        ),
-      ],
-    ),
+    // "Bathing": QuestionSet(
+    //   heading: Heading(
+    //     question: 'Bathing',
+    //     scoring: Scoring(
+    //       total: 0.15,
+    //     ),
+    //   ),
+    //   preferences: [
+    //     Preference(
+    //       question: 'How do you prefer to take a bath regularly',
+    //       components: [
+    //         Component(
+    //           id: 1,
+    //           value:
+    //               'Open Space (motor pump sets, backyard, water resources such as lake)',
+    //         ),
+    //         Component(
+    //           id: 2,
+    //           value: 'Bathroom using bucket and mug',
+    //         ),
+    //         Component(
+    //           id: 3,
+    //           value: 'Shower',
+    //         ),
+    //         Component(
+    //           id: 4,
+    //           value: 'Tub',
+    //         ),
+    //       ],
+    //       subComponents: [
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4], value: 'Able to access the dress/towel'),
+    //         SubComponent(
+    //             ids: [2, 3, 4],
+    //             value: 'hang the towel and clothes in the hanging bar'),
+    //         SubComponent(
+    //             ids: [2, 3, 4],
+    //             value:
+    //                 'adjust the tap with the temperature needed (hot or cold )'),
+    //         SubComponent(
+    //             ids: [2, 3, 4],
+    //             value: 'Able to open and close the tap/ shower'),
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4],
+    //             value: 'Able to apply soap, shampoo and conditioner '),
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4],
+    //             value: 'Able to operate electrical appliances '),
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4], value: 'Able to take shower and clean hair'),
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4],
+    //             value: 'apply soap completely throughout the bod'),
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4],
+    //             value: 'use bathing brush and clean the whole body'),
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4],
+    //             value: 'replace the soap , shampoo and conditioner'),
+    //         SubComponent(
+    //             ids: [1, 2, 3, 4], value: 'wipe your whole body with towel '),
+    //         SubComponent(ids: [4], value: 'able to get into the tub'),
+    //         SubComponent(ids: [1], value: 'able to get into pond'),
+    //       ],
+    //     )
+    //   ],
+    // ),
+
+    // "Mobility": QuestionSet(
+    //   heading: Heading(
+    //     question: 'Mobility',
+    //     scoring: Scoring(
+    //       total: 0.15,
+    //     ),
+    //   ),
+    //   preferences: [
+    //     Preference(
+    //       question: 'How do you prefer to take a bath regularly',
+    //       subComponents: [
+    //         SubComponent(
+    //             ids: [1], value: 'Able to getup from lying to sitting'),
+    //         SubComponent(
+    //             ids: [1], value: 'Able to get back from sitting to lying'),
+    //         SubComponent(
+    //             ids: [1], value: 'Able to getup from sitting to standing'),
+    //         SubComponent(
+    //             ids: [1], value: 'Able to get back from standing to sitting'),
+    //         SubComponent(
+    //             ids: [1], value: 'Able to perform standing to walking'),
+    //         SubComponent(ids: [1], value: 'Able to get back from walking'),
+    //         SubComponent(ids: [1], value: 'Able to bend'),
+    //         SubComponent(ids: [1], value: 'Reaching out for objects'),
+    //       ],
+    //     ),
+    //   ],
+    // ),
+
+    // "Toileting": QuestionSet(
+    //   heading: Heading(
+    //     question: 'Toileting',
+    //     scoring: Scoring(
+    //       total: 0.15,
+    //     ),
+    //   ),
+    //   preferences: [
+    //     Preference(
+    //       question: 'Bowel/Bladder Control',
+    //       components: [
+    //         Component(
+    //           id: 1,
+    //           value: 'Indian Commode',
+    //         ),
+    //         Component(
+    //           id: 2,
+    //           value: 'Western Commode',
+    //         ),
+    //       ],
+    //       subComponents: [
+    //         SubComponent(ids: [1, 2], value: 'Clean the Commode'),
+    //         SubComponent(ids: [1], value: 'Sit properly on the commode Squat'),
+    //         SubComponent(
+    //             ids: [1, 2],
+    //             value: 'Can clean himself using water gun / mug and water'),
+    //         SubComponent(
+    //             ids: [1],
+    //             value:
+    //                 'Able to flush/ pour water  and waits till the commode is clean'),
+    //         SubComponent(ids: [1, 2], value: 'Wash the hands and legs'),
+    //         SubComponent(ids: [1], value: 'Maintain squat posture till voids'),
+    //         SubComponent(ids: [1], value: 'Ability to squat to stand'),
+    //         SubComponent(
+    //           ids: [2],
+    //           value: 'Sit properly on the commode sitting',
+    //         ),
+    //         SubComponent(
+    //           ids: [2],
+    //           value: 'Able to flush and waits till the commode is clean',
+    //         ),
+    //         SubComponent(
+    //           ids: [2],
+    //           value: 'Maintain sitting posture till voids',
+    //         ),
+    //         SubComponent(
+    //           ids: [2],
+    //           value: 'Ability to sit to stand',
+    //         ),
+    //       ],
+    //     ),
+    //   ],
+    // ),
+
     "Personal Hygiene": QuestionSet(
       criteria: Criteria(
         parameter: 'Gender',
@@ -414,6 +419,7 @@ class QuestionController extends GetxController {
         ),
       ],
     ),
+
     "Dressing": QuestionSet(
       heading: Heading(
         question: 'Dressing',
@@ -577,11 +583,19 @@ class QuestionController extends GetxController {
     preferenceIndex = 0;
   }
 
-  int questionIndex = 0;
-  int preferenceIndex = 0;
-
   QuestionSet get selectedQuestionSetValue =>
       (questions.entries.elementAt(questionIndex).value);
+
+  set setSubcomponent(List<SubComponent> subcomponents) {
+    (questions.entries.elementAt(questionIndex).value)
+        .preferences[preferenceIndex]
+        .subComponents = subcomponents;
+  }
+
+  set preferences(List<Preference> preferences) {
+    (questions.entries.elementAt(questionIndex).value).preferences =
+        preferences;
+  }
 
   QuestionSet get nextQuestion => (questionIndex < questions.entries.length)
       ? (questions.entries.elementAt(questionIndex + 1).value)
@@ -589,92 +603,117 @@ class QuestionController extends GetxController {
 
   // ** Values Used for the UI **
   String get displayTitle => questions.entries.elementAt(questionIndex).key;
+  String get displaySubTitle => displayPreference.question ?? '';
 
   String get displayQuestion =>
       selectedQuestionSetValue.heading!.question ?? '';
 
   Preference get displayPreference {
-    try {
-      return (questions.entries
-          .elementAt(questionIndex)
-          .value
-          .preferences![preferenceIndex]);
-    } catch (e) {
-      return (questions.entries
-          .elementAt(questionIndex)
-          .value
-          .preferences![preferenceIndex - 1]);
-    }
+    return selectedQuestionSetValue.preferences[preferenceIndex];
+    // try {
+    //   return
+    // } catch (e) {
+    //   return (questions.entries
+    //       .elementAt(questionIndex)
+    //       .value
+    //       .preferences[preferenceIndex - 1]);
+    // }
   }
 
   // List<Comoponen> get
   List<Component> get displayComponents => displayPreference.components ?? [];
 
-  Set<SubComponent> get displaySubcomponents {
+  Set<SubComponent> displaySubcomponents = {};
+
+  void updateDisplaySubcomponents() {
+    if (displayComponents.isEmpty) {
+      displaySubcomponents = displayPreference.subComponents?.toSet() ?? {};
+      return;
+    }
     Set<int> selectedComponentIds = {};
     Set<SubComponent> returnValue = {};
     for (var component in displayComponents)
       if (component.isChecked) selectedComponentIds.add(component.id!);
+
     for (var componentId in selectedComponentIds) {
-      for (var subcomponent in displaySubcomponents) {
+      for (var subcomponent in displayPreference.subComponents!) {
         if (subcomponent.ids!.contains(componentId))
           returnValue.add(subcomponent);
       }
     }
 
-    return returnValue;
+    displaySubcomponents = returnValue;
   }
 
-  // Set<SubComponent>? get subComponentList =>
-  //     displaySubcomponents;
-  //  ?? displayPreference.subComponents!.toSet();
-
   Future<bool> updateResponse() async {
+    bool hasCriteria() =>
+        (nextQuestion.criteria != null) &&
+        (nextQuestion != selectedQuestionSetValue);
+
     try {
       if (questionIndex < questions.entries.length) {
-        preferenceIndex++;
-        if (preferenceIndex < selectedQuestionSetValue.preferences!.length) {
+        print('The selected question set value is $selectedQuestionSetValue');
+
+        if (preferenceIndex + 1 !=
+            selectedQuestionSetValue.preferences.length) {
+          print('The continuation of preference index');
+          setSubcomponent = displaySubcomponents.toList();
+          preferenceIndex++;
+          if (displayPreference.components == null)
+            updateDisplaySubcomponents();
           update();
           return false;
         } else {
+          print('The end of preference index');
           addUserResponse();
-          // Check whether the current question is not the last question & also check whether it's criteria is null or not
-          if ((nextQuestion.criteria != null) &&
-              (nextQuestion != selectedQuestionSetValue)) {
+
+          if (hasCriteria())
             await preferencesSelectionWidget();
-          } else {
+          else {
+            print('The no criteria  part');
             questionIndex++;
             preferenceIndex = 0;
+            displaySubcomponents = {};
           }
+          update();
+          return false;
         }
       }
       update();
+      return false;
     } catch (e) {
       return true;
     }
-    return false;
   }
 
   Future<dynamic> preferencesSelectionWidget() {
-    return showDialog(
+    print('The popup part');
+    return showDialog<List<Preference>>(
       context: scaffoldKey.currentContext!,
       barrierDismissible: false,
       builder: (builder) => SuggestionWidget(
-          title: nextQuestion.heading?.question ?? '',
-          preferenceList: nextQuestion.preferences!),
-    ).then((preferenceList) {
-      questionIndex++;
-      selectedQuestionSetValue.preferences = preferenceList;
-      preferenceIndex = 0;
-      selectedQuestionSetValue.preferences!
-          .removeWhere((element) => element.isSelected == false);
-    });
+        title: nextQuestion.heading?.question ?? '',
+        // preferenceList: nextQuestion.preferences,
+      ),
+    ).then(
+      (preferenceList) {
+        questionIndex++;
+
+        preferenceIndex = 0;
+        displaySubcomponents = {};
+        selectedQuestionSetValue.preferences
+            .removeWhere((element) => element.isSelected == false);
+      },
+    );
   }
 
   void addUserResponse() {
     // Remove the components that are not selected
     removeUnselectedComponents();
     // add it to the user response
+    setSubcomponent = displaySubcomponents.toList();
+    print('The selected question set value is $selectedQuestionSetValue');
+
     userInput.addEntries(
       [
         MapEntry(
@@ -683,10 +722,11 @@ class QuestionController extends GetxController {
         )
       ],
     );
+    print('The user input value is ${userInput.toString()}');
   }
 
   void removeUnselectedComponents() {
-    for (var preference in selectedQuestionSetValue.preferences!) {
+    for (var preference in selectedQuestionSetValue.preferences) {
       if (preference.components != null) {
         preference.components!
             .removeWhere((element) => (element.isChecked == false));
@@ -696,61 +736,42 @@ class QuestionController extends GetxController {
     }
   }
 
-  // Set<SubComponent>? updateSubComp() {
-  //   Set<SubComponent> subC = {};
-  //   try {
-  //     List<Component> idList() {
-  //       print('Function working they are going height');
-  //       return displayPreference.components!
-  //           .where((element) => element.isChecked)
-  //           .toList();
-  //     }
-  //     var temp = idList();
-  //     for (var component in temp) {
-  //       print(temp);
-  //       for (var subcomponent in displayPreference.subComponents!) {
-  //         if (subcomponent.ids!.contains(component.id)) {
-  //           subC.add(subcomponent);
-  //         }
-  //       }
-  //     }
-  //     return subC;
-  //   } catch (e) {
-  //     if (displayPreference.components == null) {
-  //       return displayPreference.subComponents!.toSet();
-  //     } else {}
-  //     return {};
-  //   }
-  // }
-
   void updateSubcomponentResponse(
     SubComponent subComponents,
-    String value,
+    String response,
   ) {
     displaySubcomponents
-        .firstWhere((element) => element.value == value)
-        .response = value;
-
-    // TODO: New Update
-    // for (var subcomponent in displaySubcomponents) {
-    //   if (subcomponent.value == subComponents.value) {
-    //     subcomponent.response = value;
-    //     break;
-    //   }
-    // }
+        .firstWhere((subComponent) => subComponent == subComponents)
+        .response = response;
     update();
   }
 
-  void calculateFinalScoring(
-      {required String key, required dynamic value}) async {
-    print('Before Updation ${userInput}');
+  void calculateFinalScoring() async {
+    void printScoring() {
+      for (var questionset in userInput.entries) {
+        if (questionset.key == 'patientDetails')
+          continue;
+        else {
+          QuestionSet value = (questionset.value as QuestionSet);
+          print(value.heading!.scoring.toString());
+          print('The preferences count is is ${value.preferences}');
+          for (var preference in value.preferences) {
+            print(
+                'The subcomponent count is ${preference.subComponents?.length.toString()}');
+          }
+        }
+      }
+    }
+
+    print('Before Updation');
+    printScoring();
     for (var userInput in userInput.entries) {
-      if (userInput.key == 'patientDetails') return;
+      if (userInput.key == 'patientDetails') continue;
       QuestionSet questionSet = userInput.value;
       // TODO: Check whether to make it nullable and work with non-null condition
       Heading heading = questionSet.heading!;
       Scoring scoring = heading.scoring!;
-      List<Preference> preferenceList = questionSet.preferences!;
+      List<Preference> preferenceList = questionSet.preferences;
 
       // TODO: FUTURE: make a getter for the scoring within the question set itself
 
@@ -774,64 +795,10 @@ class QuestionController extends GetxController {
         }
       }
     }
+
+    print('after updation $userInput');
+    printScoring();
     return;
-
-    QuestionSet questionSet = QuestionSet();
-    if (value.runtimeType == QuestionSet) {
-      value as QuestionSet;
-      questionSet.heading = value.heading;
-      questionSet.preferences = [];
-      double dependent = 0;
-      double partiallyDependent = 0;
-      double independent = 0;
-      double notApplicable = 0;
-      for (var preference in value.preferences!) {
-        Preference thisPreference = Preference();
-        if (preference.components == null) preference.components = [];
-
-        for (var component in preference.components!) {
-          if (component.isChecked) {
-            if (thisPreference.components == null) {
-              thisPreference.components = <Component>[];
-            }
-            thisPreference.components!.add(component);
-          }
-        }
-        for (var subcomponent in preference.subComponents!) {
-          if (subcomponent.response != null) {
-            if (thisPreference.subComponents == null) {
-              thisPreference.subComponents = <SubComponent>[];
-            }
-            thisPreference.subComponents!.add(subcomponent);
-            switch (subcomponent.response) {
-              case 'Dependent':
-                dependent++;
-                break;
-              case 'Independent':
-                independent++;
-                break;
-              case 'Needs Assistance':
-                partiallyDependent++;
-                break;
-              case 'Not Applicable':
-                notApplicable++;
-                break;
-              default:
-                break;
-            }
-          }
-        }
-        questionSet.preferences!.add(thisPreference);
-      }
-      questionSet.heading!.scoring!.dependent = dependent;
-      questionSet.heading!.scoring!.partiallyDependent = partiallyDependent;
-      questionSet.heading!.scoring!.independent = independent;
-      questionSet.heading!.scoring!.notApplicable = notApplicable;
-      userInput[key] = questionSet;
-    } else if (value.runtimeType == PatientDetails) {
-      userInput[key] = value;
-    }
-    print('After Updation ${userInput}');
   }
 
   // function to check whether is in between a range
@@ -852,7 +819,7 @@ class QuestionController extends GetxController {
   void initialEliminationFunction({required int age, required bool isMale}) {
     questions.entries.forEach(
       (questionSet) {
-        questionSet.value.preferences!.forEach(
+        questionSet.value.preferences.forEach(
           (preference) {
             // TODO: Check the working at last.. I guess || symbol should be used instead of &&
             preference.subComponents!.removeWhere(

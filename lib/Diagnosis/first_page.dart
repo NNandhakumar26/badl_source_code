@@ -1,4 +1,4 @@
-import 'package:badl_app/Diagnosis/question_controller.dart';
+import 'package:badl_app/diagnosis/question_controller.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:badl_app/modals/patientInfo.dart';
 import 'package:badl_app/diagnosis/main_page.dart';
@@ -243,13 +243,6 @@ class FirstPage extends GetView<QuestionController> {
                                         controller.gender ?? 'Male',
                                       ),
                                     );
-
-                                    // controller.updateValues(
-                                    //     questionSet: controller.questions[
-                                    //         controller.listOfCategories[
-                                    //             controller.currentIndex]]!);
-
-                                    // controller.updateResponse();
 
                                     Get.to(QuestionPage());
                                     // Get.to(

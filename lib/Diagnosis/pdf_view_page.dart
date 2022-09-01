@@ -1,6 +1,5 @@
-import 'package:badl_app/Diagnosis/first_page.dart';
+import 'package:badl_app/diagnosis/first_page.dart';
 import 'package:badl_app/network/network.dart';
-
 import 'package:badl_app/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +14,8 @@ class PDFViewPage extends StatelessWidget {
   PDFViewPage({required this.userInput});
 
   Future<dynamic> addUser() async {
-    Network.addReportToDb(userInput.map(
-        (key, value) => MapEntry(key, (value != null) ? value.toJson() : '')));
+    // await Network.addReportToDb(userInput.map(
+    //     (key, value) => MapEntry(key, (value != null) ? value.toJson() : '')));
 
     var temp;
 

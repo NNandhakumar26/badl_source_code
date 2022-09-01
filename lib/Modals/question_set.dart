@@ -5,10 +5,10 @@ import 'heading.dart';
 
 class QuestionSet {
   Heading? heading;
-  List<Preference>? preferences;
+  List<Preference> preferences;
   Criteria? criteria;
 
-  QuestionSet({this.heading, this.preferences, this.criteria});
+  QuestionSet({this.heading, required this.preferences, this.criteria});
 
   Map<String, dynamic> toMap() {
     return {
@@ -25,7 +25,7 @@ class QuestionSet {
 
   Map<String, dynamic> toJson() => {
         'heading': heading!.toJson(),
-        'preferences': List<dynamic>.from(preferences!.map((x) => x.toJson())),
+        'preferences': List<dynamic>.from(preferences.map((x) => x.toJson())),
       };
 
   @override

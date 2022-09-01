@@ -1,8 +1,8 @@
 // import 'package:animate_do/animate_do.dart';
 // import 'package:badl_app/Chat/chat_screen.dart';
-// import 'package:badl_app/Diagnosis/bouncing_widget.dart';
-// import 'package:badl_app/Diagnosis/pdf_view_page.dart';
-// import 'package:badl_app/Diagnosis/question_controller.dart';
+// import 'package:badl_app/diagnosis/bouncing_widget.dart';
+// import 'package:badl_app/diagnosis/pdf_view_page.dart';
+// import 'package:badl_app/diagnosis/question_controller.dart';
 // import 'package:badl_app/modals/preference.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -100,6 +101,11 @@ class Scoring {
         "independent": independent,
         // "notApplicable": notApplicable,
       };
+
+  @override
+  String toString() {
+    return 'Scoring(total: $total, dependent: $dependent, partiallyDependent: $partiallyDependent, independent: $independent)';
+  }
 }
 
 class Component {

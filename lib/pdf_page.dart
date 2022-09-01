@@ -518,13 +518,15 @@ class PdfPage {
 
   static double subComponentLength(QuestionSet questionSet) {
     double value = 0;
-    questionSet.preferences!.map((e) => e.subComponents!.map((sub) => ++value));
-    for (var preference in questionSet.preferences!) {
+    questionSet.preferences.map((e) => e.subComponents!.map((sub) => ++value));
+    for (var preference in questionSet.preferences) {
       for (var sub in preference.subComponents!) {
         value++;
       }
     }
-    return value - questionSet.heading!.scoring!.notApplicable!.toDouble();
+    // TODO: NOTE HEre
+    return value;
+    // return value - questionSet.heading!.scoring!.notApplicable!.toDouble();
   }
 
   static double percentageCalculator({double value = 1, double length = 1}) {

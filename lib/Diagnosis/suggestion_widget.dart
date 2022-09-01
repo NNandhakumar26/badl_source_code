@@ -1,13 +1,12 @@
-import 'package:badl_app/modals/preference.dart';
+import 'package:badl_app/diagnosis/question_controller.dart';
 import 'package:badl_app/style.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class SuggestionWidget extends StatefulWidget {
   final String title;
-  final List<Preference> preferenceList;
-  const SuggestionWidget(
-      {Key? key, required this.title, required this.preferenceList})
-      : super(key: key);
+  // final List<Preference> preferenceList;
+  const SuggestionWidget({Key? key, required this.title}) : super(key: key);
 
   @override
   State<SuggestionWidget> createState() => _SuggestionWidgetState();
@@ -16,54 +15,55 @@ class SuggestionWidget extends StatefulWidget {
 class _SuggestionWidgetState extends State<SuggestionWidget> {
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      title: Column(
-        children: [
-          Text(
-            widget.title,
-            style: Theme.of(context).textTheme.headline6!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+    return GetBuilder(
+      builder: (QuestionController controller) {
+        return SimpleDialog(
+          title: Column(
+            children: [
+              Text(
+                widget.title,
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Text(
+                'Select The Appropriate Ones',
+                style: Theme.of(context).textTheme.caption!.copyWith(
+                      fontSize: 10,
+                    ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 4,
-          ),
-          Text(
-            'Select The Appropriate Ones',
-            style: Theme.of(context).textTheme.caption!.copyWith(
-                  fontSize: 10,
-                ),
-          ),
-        ],
-      ),
-      children: [
-        ...widget.preferenceList
-            .map(
-              (e) => CheckboxListTile(
-                value: e.isSelected,
+          children: [
+            for (int i = 0; i < controller.nextQuestion.preferences.length; i++)
+              CheckboxListTile(
+                value: controller.nextQuestion.preferences[i].isSelected,
                 activeColor: Style.nearlyDarkBlue,
                 onChanged: (value) {
-                  widget.preferenceList[widget.preferenceList.indexOf(e)]
-                      .isSelected = value ?? false;
+                  controller.nextQuestion.preferences[i].isSelected =
+                      value ?? false;
                   setState(() {});
                 },
                 title: Text(
-                  e.question ?? '',
+                  controller.nextQuestion.preferences[i].question ?? '',
                   style: Theme.of(context).textTheme.bodyText2!.copyWith(
                         color: Colors.black.withOpacity(0.60),
                         fontSize: 14,
                       ),
                 ),
               ),
-            )
-            .toList(),
-        doneButton(context),
-      ],
+            doneButton(context, controller),
+          ],
+        );
+      },
     );
   }
 
-  Widget doneButton(BuildContext context) {
+  Widget doneButton(BuildContext context, QuestionController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 48,
@@ -72,13 +72,13 @@ class _SuggestionWidgetState extends State<SuggestionWidget> {
       child: FloatingActionButton.extended(
         onPressed: () {
           bool value = false;
-          for (var item in widget.preferenceList) {
+          for (var item in controller.nextQuestion.preferences) {
             if (item.isSelected == true) {
               value = true;
             }
           }
           if (value) {
-            Navigator.pop(context, widget.preferenceList);
+            Navigator.pop(context);
           }
         },
         label: Text(

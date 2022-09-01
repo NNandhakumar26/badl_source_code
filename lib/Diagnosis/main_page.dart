@@ -15,7 +15,6 @@ class QuestionPage extends GetView<QuestionController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuestionController>(
-      // TODO: Commented out now
       // init: QuestionController(),
       builder: (QuestionController controller) {
         return DecoratedBox(
@@ -41,7 +40,7 @@ class QuestionPage extends GetView<QuestionController> {
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                controller.displayQuestion,
+                                controller.displaySubTitle,
                                 textAlign: TextAlign.center,
                                 style: Style.headline6.copyWith(
                                   fontSize: 18,
@@ -98,7 +97,8 @@ class QuestionPage extends GetView<QuestionController> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: BouncingButton(
           voidCallback: () async {
-            if (controller.formKey.currentState!.validate()) {
+            // if (controller.formKey.currentState!.validate()) {
+            if (true) {
               controller.updateResponse().then(
                 (value) {
                   if (value) {
@@ -141,6 +141,7 @@ class ComponentWidget extends StatelessWidget {
         value: e!.isChecked,
         onChanged: (value) {
           e!.isChecked = value ?? false;
+          controller!.updateDisplaySubcomponents();
           // controller!.updateSubComp();
           controller!.update();
           // controller!.loadSubComponents(e!, value!);

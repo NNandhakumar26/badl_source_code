@@ -17,13 +17,8 @@ Future<void> main() async {
       messagingSenderId: "435708067697",
       projectId: "badl-7d08e",
     ),
-    // options: FirebaseOptions(
-    //   apiKey: "AIzaSyCcjmtc6X279u8zr2NQqbNR3ixuYGmN-GI",
-    //   appId: "1:435708067697:web:4a8a928961ff54467280d0",
-    //   messagingSenderId: "435708067697",
-    //   projectId: "badl-7d08e",
-    // ),
   );
+
   // Local.setValue(value: null);
   runApp(
     GetMaterialApp(

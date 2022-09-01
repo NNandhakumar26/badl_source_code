@@ -1,6 +1,6 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:badl_app/Diagnosis/bouncing_widget.dart';
-import 'package:badl_app/Diagnosis/first_page.dart';
+import 'package:badl_app/diagnosis/bouncing_widget.dart';
+import 'package:badl_app/diagnosis/first_page.dart';
 import 'package:badl_app/login/login_controller.dart';
 import 'package:badl_app/login/user_info.dart';
 import 'package:flutter/foundation.dart';
