@@ -583,8 +583,7 @@ class QuestionController extends GetxController {
     preferenceIndex = 0;
   }
 
-  QuestionSet get selectedQuestionSetValue =>
-      (questions.entries.elementAt(questionIndex).value);
+  QuestionSet get selectedQuestionSetValue => questionSetIndex(questionIndex);
 
   set setSubcomponent(List<SubComponent> subcomponents) {
     (questions.entries.elementAt(questionIndex).value)
@@ -598,8 +597,11 @@ class QuestionController extends GetxController {
   }
 
   QuestionSet get nextQuestion => (questionIndex < questions.entries.length)
-      ? (questions.entries.elementAt(questionIndex + 1).value)
+      ? questionSetIndex(questionIndex + 1)
       : selectedQuestionSetValue;
+
+  QuestionSet questionSetIndex(int index) =>
+      questions.entries.elementAt(index).value;
 
   // ** Values Used for the UI **
   String get displayTitle => questions.entries.elementAt(questionIndex).key;
@@ -620,13 +622,13 @@ class QuestionController extends GetxController {
     // }
   }
 
-  // List<Comoponen> get
   List<Component> get displayComponents => displayPreference.components ?? [];
 
   Set<SubComponent> displaySubcomponents = {};
 
   void updateDisplaySubcomponents() {
-    if (displayComponents.isEmpty) {
+    if (displayPreference.components == null) {
+      print('Entered into the null component value function');
       displaySubcomponents = displayPreference.subComponents?.toSet() ?? {};
       return;
     }
@@ -693,16 +695,16 @@ class QuestionController extends GetxController {
       barrierDismissible: false,
       builder: (builder) => SuggestionWidget(
         title: nextQuestion.heading?.question ?? '',
-        // preferenceList: nextQuestion.preferences,
+        referenceQuestionIndex: questionIndex + 1,
       ),
     ).then(
       (preferenceList) {
         questionIndex++;
-
         preferenceIndex = 0;
         displaySubcomponents = {};
         selectedQuestionSetValue.preferences
             .removeWhere((element) => element.isSelected == false);
+        if (displayPreference.components == null) updateDisplaySubcomponents();
       },
     );
   }

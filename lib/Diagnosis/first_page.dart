@@ -20,243 +20,246 @@ class FirstPage extends GetView<QuestionController> {
         return Scaffold(
           body: SafeArea(
             child: Container(
-              height: Get.height,
-              width: Get.width,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   backgroundWidget(context),
-                  ListView(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(28),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(),
-                              child: Text(
-                                "BADL Index",
-                                style: Style.headline5.copyWith(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
+                  SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(28),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(),
+                                child: Text(
+                                  "BADL Index",
+                                  style: Style.headline5.copyWith(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 24,
-                              ),
-                              child: Text(
-                                'Signed in as, ${FirebaseAuth.instance.currentUser?.displayName ?? 'User'}',
-                                style: Style.subtitle1.copyWith(
-                                  // fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black38,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: 24,
+                                ),
+                                child: Text(
+                                  'Signed in as, ${FirebaseAuth.instance.currentUser?.displayName ?? 'User'}',
+                                  style: Style.subtitle1.copyWith(
+                                    // fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black38,
+                                  ),
                                 ),
                               ),
-                            ),
 
-                            FadeInDown(
-                              delay: Duration(milliseconds: 300),
-                              duration: Duration(milliseconds: 500),
-                              child: firstPageContainer(
-                                title: 'Age',
-                                inputType: TextInputType.number,
-                                onChanged: (String text) {
-                                  if (int.tryParse(text) != null) {
-                                    controller.patientDetails.age =
-                                        int.parse(text);
-                                    if ((int.parse(text) <= 5) &&
-                                        (int.parse(text) > 0)) {
-                                      controller.lessThan5 = true;
-                                      controller.update();
-                                    } else {
-                                      controller.lessThan5 = false;
-                                      controller.update();
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
-
-                            if (controller.lessThan5)
-                              BounceInDown(
-                                delay: Duration(milliseconds: 100),
+                              FadeInDown(
+                                delay: Duration(milliseconds: 300),
                                 duration: Duration(milliseconds: 500),
                                 child: firstPageContainer(
-                                  title: 'Months',
+                                  title: 'Age',
                                   inputType: TextInputType.number,
                                   onChanged: (String text) {
                                     if (int.tryParse(text) != null) {
-                                      controller.patientDetails.months =
+                                      controller.patientDetails.age =
                                           int.parse(text);
-                                      // controller.otpValue = text;
+                                      if ((int.parse(text) <= 5) &&
+                                          (int.parse(text) > 0)) {
+                                        controller.lessThan5 = true;
+                                        controller.update();
+                                      } else {
+                                        controller.lessThan5 = false;
+                                        controller.update();
+                                      }
                                     }
                                   },
                                 ),
                               ),
-                            FadeInDown(
-                              delay: Duration(milliseconds: 400),
-                              duration: Duration(milliseconds: 500),
-                              child: firstPageContainer(
-                                title: 'Gender',
-                                widget: DropdownButton<String>(
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
-                                  value: (controller.gender == null)
-                                      ? controller.gender = 'Male'
-                                      : controller.gender,
-                                  isExpanded: true,
-                                  underline: Container(
-                                    height: 0.4,
-                                    color: Colors.blueGrey.shade600,
-                                  ),
-                                  items: ['Male', 'Female'].map(
-                                    (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: Style.subtitle2.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: Colors.blueGrey.shade700,
-                                          ),
-                                        ),
-                                      );
+
+                              if (controller.lessThan5)
+                                BounceInDown(
+                                  delay: Duration(milliseconds: 100),
+                                  duration: Duration(milliseconds: 500),
+                                  child: firstPageContainer(
+                                    title: 'Months',
+                                    inputType: TextInputType.number,
+                                    onChanged: (String text) {
+                                      if (int.tryParse(text) != null) {
+                                        controller.patientDetails.months =
+                                            int.parse(text);
+                                        // controller.otpValue = text;
+                                      }
                                     },
-                                  ).toList(),
-                                  onChanged: (value) {
-                                    controller.selectGender(value!);
-                                  },
-                                ),
-                              ),
-                            ),
-
-                            FadeInDown(
-                              delay: Duration(milliseconds: 500),
-                              duration: Duration(milliseconds: 500),
-                              child: firstPageContainer(
-                                title: 'Diagnosis',
-                                inputType: TextInputType.text,
-                                onChanged: (String text) {
-                                  controller.patientDetails.diagnosis = text;
-                                  // if (int.tryParse(text) != null) {
-                                  //   // controller.otpValue = text;
-                                  // }
-                                },
-                              ),
-                            ),
-
-                            FadeInDown(
-                              delay: Duration(milliseconds: 600),
-                              duration: Duration(milliseconds: 500),
-                              child: firstPageContainer(
-                                title: 'Any Orthoses / Prostheses',
-                                widget: DropdownButton<String>(
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
                                   ),
-                                  value: (controller.selectOrthoses == null)
-                                      ? 'No'
-                                      : controller.selectOrthoses,
-                                  isExpanded: true,
-                                  underline: Container(
-                                    height: 0.6,
-                                    color: Colors.black54,
-                                  ),
-                                  items: ['Yes', 'No'].map(
-                                    (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: Style.subtitle2.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: Colors.blueGrey.shade700,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ).toList(),
-                                  onChanged: (value) {
-                                    controller
-                                        .selectOrthosesOrProtheses(value!);
-                                  },
                                 ),
-                              ),
-                            ),
-
-                            (controller.selectOrthoses == 'Yes')
-                                ? BounceInDown(
-                                    delay: Duration(milliseconds: 100),
-                                    duration: Duration(milliseconds: 500),
-                                    child: firstPageContainer(
-                                      title: 'Name Of the Device',
-                                      onChanged: (String text) {
-                                        controller.patientDetails
-                                            .nameOfTheDevice = text;
-                                      },
+                              FadeInDown(
+                                delay: Duration(milliseconds: 400),
+                                duration: Duration(milliseconds: 500),
+                                child: firstPageContainer(
+                                  title: 'Gender',
+                                  widget: DropdownButton<String>(
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
                                     ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 22,
-                            ),
-                            //button
-                            ElasticIn(
-                              delay: Duration(milliseconds: 800),
-                              duration: Duration(milliseconds: 800),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: BouncingButton(
-                                  title: 'Continue',
-                                  voidCallback: () async {
-                                    controller.userInput.addAll(
-                                      {
-                                        "patientDetails": PatientDetails(
-                                          age: controller.patientDetails.age,
-                                          gender: controller.gender ?? 'Male',
-                                          months:
-                                              controller.patientDetails.months,
-                                          anyOrthosesOrProstheses:
-                                              controller.hasOrthoProsthesis,
-                                          nameOfTheDevice: controller
-                                              .patientDetails.nameOfTheDevice,
-                                          diagnosis: controller
-                                              .patientDetails.diagnosis,
-                                        )
+                                    value: (controller.gender == null)
+                                        ? controller.gender = 'Male'
+                                        : controller.gender,
+                                    isExpanded: true,
+                                    underline: Container(
+                                      height: 0.4,
+                                      color: Colors.blueGrey.shade600,
+                                    ),
+                                    items: ['Male', 'Female'].map(
+                                      (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: Style.subtitle2.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16,
+                                              color: Colors.blueGrey.shade700,
+                                            ),
+                                          ),
+                                        );
                                       },
-                                    );
+                                    ).toList(),
+                                    onChanged: (value) {
+                                      controller.selectGender(value!);
+                                    },
+                                  ),
+                                ),
+                              ),
 
-                                    controller.initialEliminationFunction(
-                                      age: controller.patientDetails.age,
-                                      isMale: controller.stringToIsMale(
-                                        controller.gender ?? 'Male',
-                                      ),
-                                    );
-
-                                    Get.to(QuestionPage());
-                                    // Get.to(
-                                    //   PDFViewPage(
-                                    //       userInput: controller.questions),
-                                    // );
+                              FadeInDown(
+                                delay: Duration(milliseconds: 500),
+                                duration: Duration(milliseconds: 500),
+                                child: firstPageContainer(
+                                  title: 'Diagnosis',
+                                  inputType: TextInputType.text,
+                                  onChanged: (String text) {
+                                    controller.patientDetails.diagnosis = text;
+                                    // if (int.tryParse(text) != null) {
+                                    //   // controller.otpValue = text;
+                                    // }
                                   },
                                 ),
                               ),
-                            )
-                          ],
+
+                              FadeInDown(
+                                delay: Duration(milliseconds: 600),
+                                duration: Duration(milliseconds: 500),
+                                child: firstPageContainer(
+                                  title: 'Any Orthoses / Prostheses',
+                                  widget: DropdownButton<String>(
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                    value: (controller.selectOrthoses == null)
+                                        ? 'No'
+                                        : controller.selectOrthoses,
+                                    isExpanded: true,
+                                    underline: Container(
+                                      height: 0.6,
+                                      color: Colors.black54,
+                                    ),
+                                    items: ['Yes', 'No'].map(
+                                      (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: Style.subtitle2.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16,
+                                              color: Colors.blueGrey.shade700,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ).toList(),
+                                    onChanged: (value) {
+                                      controller
+                                          .selectOrthosesOrProtheses(value!);
+                                    },
+                                  ),
+                                ),
+                              ),
+
+                              (controller.selectOrthoses == 'Yes')
+                                  ? BounceInDown(
+                                      delay: Duration(milliseconds: 100),
+                                      duration: Duration(milliseconds: 500),
+                                      child: firstPageContainer(
+                                        title: 'Name Of the Device',
+                                        onChanged: (String text) {
+                                          controller.patientDetails
+                                              .nameOfTheDevice = text;
+                                        },
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              SizedBox(
+                                height: 22,
+                              ),
+                              //button
+                              ElasticIn(
+                                delay: Duration(milliseconds: 800),
+                                duration: Duration(milliseconds: 800),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: BouncingButton(
+                                    title: 'Continue',
+                                    voidCallback: () async {
+                                      controller.userInput.addAll(
+                                        {
+                                          "patientDetails": PatientDetails(
+                                            age: controller.patientDetails.age,
+                                            gender: controller.gender ?? 'Male',
+                                            months: controller
+                                                .patientDetails.months,
+                                            anyOrthosesOrProstheses:
+                                                controller.hasOrthoProsthesis,
+                                            nameOfTheDevice: controller
+                                                .patientDetails.nameOfTheDevice,
+                                            diagnosis: controller
+                                                .patientDetails.diagnosis,
+                                          )
+                                        },
+                                      );
+
+                                      controller.initialEliminationFunction(
+                                        age: controller.patientDetails.age,
+                                        isMale: controller.stringToIsMale(
+                                          controller.gender ?? 'Male',
+                                        ),
+                                      );
+
+                                      Get.to(QuestionPage());
+                                      // Get.to(
+                                      //   PDFViewPage(
+                                      //       userInput: controller.questions),
+                                      // );
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -33,6 +33,8 @@ class QuestionPage extends GetView<QuestionController> {
                   children: [
                     FadeIn(
                       delay: Duration(milliseconds: 200),
+                      // TODO: widget goes invisiblee
+                      animate: true,
                       duration: Duration(milliseconds: 500),
                       child: CustomCardWidget(
                         widget: Column(

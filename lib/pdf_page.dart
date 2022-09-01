@@ -529,7 +529,7 @@ class PdfPage {
     // return value - questionSet.heading!.scoring!.notApplicable!.toDouble();
   }
 
-  static double percentageCalculator({double value = 1, double length = 1}) {
+  static double percentageCalculator({int value = 1, double length = 1}) {
     return value / length;
   }
 

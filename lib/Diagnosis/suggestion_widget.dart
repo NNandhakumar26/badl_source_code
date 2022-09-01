@@ -5,8 +5,12 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 
 class SuggestionWidget extends StatefulWidget {
   final String title;
-  // final List<Preference> preferenceList;
-  const SuggestionWidget({Key? key, required this.title}) : super(key: key);
+  final int referenceQuestionIndex;
+  const SuggestionWidget({
+    Key? key,
+    required this.title,
+    required this.referenceQuestionIndex,
+  }) : super(key: key);
 
   @override
   State<SuggestionWidget> createState() => _SuggestionWidgetState();
@@ -39,17 +43,32 @@ class _SuggestionWidgetState extends State<SuggestionWidget> {
             ],
           ),
           children: [
-            for (int i = 0; i < controller.nextQuestion.preferences.length; i++)
+            for (int i = 0;
+                i <
+                    controller
+                        .questionSetIndex(widget.referenceQuestionIndex)
+                        .preferences
+                        .length;
+                i++)
               CheckboxListTile(
-                value: controller.nextQuestion.preferences[i].isSelected,
+                value: controller
+                    .questionSetIndex(widget.referenceQuestionIndex)
+                    .preferences[i]
+                    .isSelected,
                 activeColor: Style.nearlyDarkBlue,
                 onChanged: (value) {
-                  controller.nextQuestion.preferences[i].isSelected =
-                      value ?? false;
+                  controller
+                      .questionSetIndex(widget.referenceQuestionIndex)
+                      .preferences[i]
+                      .isSelected = value ?? false;
                   setState(() {});
                 },
                 title: Text(
-                  controller.nextQuestion.preferences[i].question ?? '',
+                  controller
+                          .questionSetIndex(widget.referenceQuestionIndex)
+                          .preferences[i]
+                          .question ??
+                      '',
                   style: Theme.of(context).textTheme.bodyText2!.copyWith(
                         color: Colors.black.withOpacity(0.60),
                         fontSize: 14,
