@@ -60,17 +60,20 @@ class Scoring {
   int dependent;
   int partiallyDependent;
   int independent;
-  // int? notApplicable;
 
   Scoring({
     this.total,
     this.dependent = 0,
     this.partiallyDependent = 0,
     this.independent = 0,
-    // this.notApplicable = 0,
   });
 
-  double get relativeDependent => 0.0;
+  double get relativeScore {
+    double value =
+        ((total ?? 0) * (independentPercent + (partialPercent / 2)) / 100);
+    print('The Scoring value is ${value.toString()}');
+    return value;
+  }
 
   int get totalCount => dependent + independent + partiallyDependent;
   double get dependentPercent => (dependent / totalCount) * 100;

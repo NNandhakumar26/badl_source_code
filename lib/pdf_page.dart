@@ -145,8 +145,9 @@ class PdfPage {
                 buildScores(
                   context,
                   scoring: scoring,
-                  length: subComponentLength(entry.value),
+                  // length: subComponentLength(entry.value),
                   total: scoring.total ?? 0,
+                  relativeScore: scoring.relativeScore,
                 ),
               ],
             ),
@@ -436,21 +437,25 @@ class PdfPage {
     );
   }
 
-  static buildScores(context, {scoring, double length = 1, total}) {
-    double calculation() {
-      var dependent = percentageCalculator(
-        value: scoring?.dependent ?? 0,
-        length: length,
-      );
-      var partiallyDependent = percentageCalculator(
-        value: scoring?.partiallyDependent ?? 0,
-        length: length,
-      );
+  static buildScores(context,
+      {scoring,
+      double length = 1,
+      double total = 0,
+      required double relativeScore}) {
+    // double calculation() {
+    //   var dependent = percentageCalculator(
+    //     value: scoring?.dependent ?? 0,
+    //     length: length,
+    //   );
+    //   var partiallyDependent = percentageCalculator(
+    //     value: scoring?.partiallyDependent ?? 0,
+    //     length: length,
+    //   );
 
-      double temp = ((total * dependent) / 100) +
-          (((total * partiallyDependent) / 100) / 2);
-      return temp * 100;
-    }
+    //   double temp = ((total * dependent) / 100) +
+    //       (((total * partiallyDependent) / 100) / 2);
+    //   return temp * 100;
+    // }
 
     return pw.Center(
       child: pw.Container(
@@ -473,7 +478,7 @@ class PdfPage {
                 color: PdfColors.white,
               ),
               child: pw.Text(
-                'Total Score  :  ${calculation().toStringAsFixed(2)} / ${total}',
+                'Total Score  :  ${relativeScore.toStringAsFixed(2)} / ${total.toStringAsFixed(2)}',
                 style: pw.Theme.of(context).defaultTextStyle.copyWith(
                       fontWeight: pw.FontWeight.bold,
                     ),
