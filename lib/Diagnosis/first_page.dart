@@ -246,11 +246,10 @@ class FirstPage extends GetView<QuestionController> {
                                         ),
                                       );
 
-                                      Get.to(QuestionPage());
-                                      // Get.to(
-                                      //   PDFViewPage(
-                                      //       userInput: controller.questions),
-                                      // );
+                                      Style.navigateBack(
+                                        context,
+                                        QuestionPage(),
+                                      );
                                     },
                                   ),
                                 ),

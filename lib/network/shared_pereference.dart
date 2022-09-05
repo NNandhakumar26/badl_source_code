@@ -28,7 +28,7 @@ class Local {
   }
 
 //get user name
-  static Future<dynamic> getUserName() async {
+  static Future<String?> getUserName() async {
     return _prefs!.getString('userName');
   }
 
@@ -38,8 +38,8 @@ class Local {
     return true;
   }
 
-  static Future<dynamic> getDesignation() async {
-    return _prefs!.getString('designation') ?? 'Occupational Therapist';
+  static Future<String?> getDesignation() async {
+    return _prefs!.getString('designation');
   }
   // check whether user is logged in or not
 }

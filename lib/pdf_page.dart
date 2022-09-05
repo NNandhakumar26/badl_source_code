@@ -2,6 +2,7 @@ import 'package:badl_app/modals/patientInfo.dart';
 import 'package:badl_app/modals/preference.dart';
 import 'package:badl_app/modals/question_set.dart';
 import 'package:badl_app/network/shared_pereference.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -19,8 +20,8 @@ class PdfPage {
     );
     print('passed 1');
 
-    String name = await Local.getUserName();
-    String designation = await Local.getDesignation();
+    String? name = await Local.getUserName();
+    String? designation = await Local.getDesignation();
 
     Future<pw.PageTheme> _myPageTheme() async {
       PdfPageFormat format = PdfPageFormat.a4;
@@ -112,11 +113,17 @@ class PdfPage {
                   ),
                 ],
               ),
-              patientDetailsWidget(details: data['patientDetails']),
-              signatureWidget(
-                context,
-                name: name,
-                designation: designation,
+              patientDetailsWidget(
+                details: data['patientDetails'],
+              ),
+              pw.Column(
+                children: [
+                  signatureWidget(
+                    context,
+                    name: name,
+                    designation: designation,
+                  ),
+                ],
               ),
             ],
           );
@@ -127,11 +134,11 @@ class PdfPage {
     for (var entry in data.entries) {
       if (entry.value.runtimeType == QuestionSet) {
         Scoring scoring = entry.value.heading!.scoring!;
-        print('object');
-        print(scoring.dependentPercent);
-        print(scoring.independent);
-        print(scoring.partiallyDependent);
-        print('object');
+        // print('object');
+        // print(scoring.dependentPercent);
+        // print(scoring.independent);
+        // print(scoring.partiallyDependent);
+        // print('object');
         List<Preference> preferences = entry.value.preferences;
         doc.addPage(
           pw.Page(
@@ -172,11 +179,13 @@ class PdfPage {
                       style: pw.Theme.of(context).defaultTextStyle.copyWith(),
                     ),
                     pw.SizedBox(height: 2),
-                    pw.Text('Digital Assessment Platform',
-                        textScaleFactor: 0.6,
-                        style: pw.Theme.of(context)
-                            .defaultTextStyle
-                            .copyWith(color: PdfColors.grey700)),
+                    pw.Text(
+                      'Digital Assessment Platform',
+                      textScaleFactor: 0.6,
+                      style: pw.Theme.of(context).defaultTextStyle.copyWith(
+                            color: PdfColors.grey700,
+                          ),
+                    ),
                   ],
                 ),
               );
@@ -203,7 +212,7 @@ class PdfPage {
       }
     }
 
-    print('Finidhed');
+    print('Finished');
     return doc.save();
   }
 
@@ -279,7 +288,7 @@ class PdfPage {
     );
   }
 
-  static buildText({
+  static pw.Widget buildText({
     required String title,
     required String value,
     double width = double.infinity,
@@ -320,7 +329,7 @@ class PdfPage {
     );
   }
 
-  static _buildPreference(context, Preference preference) {
+  static pw.Widget _buildPreference(context, Preference preference) {
     return pw.Column(
       children: <pw.Widget>[
         pw.Padding(
@@ -420,58 +429,98 @@ class PdfPage {
     required Scoring scoring,
     required double relativeScore,
   }) {
-    return pw.Center(
-      child: pw.Container(
-        decoration: pw.BoxDecoration(
-          color: PdfColors.grey200,
-          borderRadius: pw.BorderRadius.circular(4),
+    return scoringLayout(
+      [
+        pw.Container(
+          padding: const pw.EdgeInsets.symmetric(horizontal: 64, vertical: 8),
+          decoration: pw.BoxDecoration(
+            borderRadius: pw.BorderRadius.circular(2),
+            color: PdfColors.white,
+          ),
+          child: pw.Text(
+            'Total Score  :  ${relativeScore.toStringAsFixed(2)} / ${scoring.total!.toStringAsFixed(2)}',
+            style: pw.Theme.of(context).defaultTextStyle.copyWith(
+                  fontWeight: pw.FontWeight.bold,
+                ),
+          ),
         ),
-        margin: pw.EdgeInsets.symmetric(horizontal: 6),
-        padding: pw.EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 16,
+        pw.Padding(
+          padding: pw.EdgeInsets.symmetric(vertical: 4),
+          child: pw.Row(
+            children: [
+              linearProgressIndicator(
+                context,
+                value: scoring.dependentPercent,
+                text: 'Dependent',
+              ),
+              linearProgressIndicator(
+                context,
+                value: scoring.partialPercent,
+                text: 'Partially Dependent',
+              ),
+              linearProgressIndicator(
+                context,
+                value: scoring.independentPercent,
+                text: 'Independent',
+              ),
+            ],
+          ),
         ),
-        child: pw.Column(
-          children: [
-            pw.Container(
-              padding:
-                  const pw.EdgeInsets.symmetric(horizontal: 64, vertical: 8),
-              decoration: pw.BoxDecoration(
-                borderRadius: pw.BorderRadius.circular(2),
-                color: PdfColors.white,
-              ),
-              child: pw.Text(
-                'Total Score  :  ${relativeScore.toStringAsFixed(2)} / ${scoring.total!.toStringAsFixed(2)}',
-                style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                      fontWeight: pw.FontWeight.bold,
-                    ),
-              ),
-            ),
-            pw.Padding(
-              padding: pw.EdgeInsets.symmetric(vertical: 4),
-              child: pw.Row(
-                children: [
-                  linearProgressIndicator(
-                    context,
-                    value: scoring.dependentPercent,
-                    text: 'Dependent',
-                  ),
-                  linearProgressIndicator(
-                    context,
-                    value: scoring.partialPercent,
-                    text: 'Partially Dependent',
-                  ),
-                  linearProgressIndicator(
-                    context,
-                    value: scoring.independentPercent,
-                    text: 'Independent',
-                  ),
-                ],
-              ),
-            ),
-          ],
+      ],
+    );
+  }
+
+  static pw.Widget masterScoringWidget(
+      pw.Context context, List<Scoring> scoringList) {
+    double percentCalculator(List<double> values) =>
+        values.fold<double>(
+            0.0, (previousValue, value) => previousValue + value) /
+        (scoringList.length * 100);
+
+    double actualScore = scoringList.fold(0.0,
+        (previousValue, scoring) => previousValue + (scoring.total ?? 0.0));
+
+    return scoringLayout(
+      [
+        pw.Container(
+          padding: const pw.EdgeInsets.symmetric(horizontal: 64, vertical: 8),
+          decoration: pw.BoxDecoration(
+            borderRadius: pw.BorderRadius.circular(2),
+            color: PdfColors.white,
+          ),
+          child: pw.Text(
+            'Total Score  :  ${actualScore.toStringAsFixed(2)} / 1',
+            style: pw.Theme.of(context).defaultTextStyle.copyWith(
+                  fontWeight: pw.FontWeight.bold,
+                ),
+          ),
         ),
-      ),
+        pw.Padding(
+          padding: pw.EdgeInsets.symmetric(vertical: 4),
+          child: pw.Row(
+            children: [
+              linearProgressIndicator(
+                context,
+                value: percentCalculator(
+                    scoringList.map((e) => e.dependentPercent).toList()),
+                text: 'Dependent',
+              ),
+              linearProgressIndicator(
+                context,
+                value: percentCalculator(
+                    scoringList.map((e) => e.partialPercent).toList()),
+                text: 'Partially Dependent',
+              ),
+              linearProgressIndicator(
+                context,
+                value: percentCalculator(
+                    scoringList.map((e) => e.independentPercent).toList()),
+                text: 'Independent',
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -507,7 +556,7 @@ class PdfPage {
   }
 
   static pw.Widget signatureWidget(context,
-      {required String name, required String designation}) {
+      {String? name, String? designation}) {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.end,
       children: [
@@ -516,36 +565,51 @@ class PdfPage {
           padding: const pw.EdgeInsets.all(8.0),
           child: pw.Column(
             children: [
-              // pw.Container(
-              //   height: 100,
-              //   width: 120,
-              //   margin: pw.EdgeInsets.all(8),
-              //   color: PdfColors.white,
-              // ),
-              pw.Text(
-                name,
-                textAlign: pw.TextAlign.center,
-                style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                      fontWeight: pw.FontWeight.bold,
-                      fontSize: 18,
-                      letterSpacing: 0.4,
-                    ),
-              ),
+              if (name != null)
+                pw.Text(
+                  name,
+                  textAlign: pw.TextAlign.center,
+                  style: pw.Theme.of(context).defaultTextStyle.copyWith(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 18,
+                        letterSpacing: 0.4,
+                      ),
+                ),
               pw.SizedBox(
                 height: 6,
               ),
-              pw.Text(
-                designation,
-                style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                      fontWeight: pw.FontWeight.bold,
-                      fontSize: 15,
-                      color: lightBlack,
-                    ),
-              ),
+              if (designation != null)
+                pw.Text(
+                  designation,
+                  style: pw.Theme.of(context).defaultTextStyle.copyWith(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 15,
+                        color: lightBlack,
+                      ),
+                ),
             ],
           ),
         )
       ],
+    );
+  }
+
+  static pw.Widget scoringLayout(List<pw.Widget> widgetList) {
+    return pw.Center(
+      child: pw.Container(
+        decoration: pw.BoxDecoration(
+          color: PdfColors.grey200,
+          borderRadius: pw.BorderRadius.circular(4),
+        ),
+        margin: pw.EdgeInsets.symmetric(horizontal: 6),
+        padding: pw.EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 16,
+        ),
+        child: pw.Column(
+          children: widgetList,
+        ),
+      ),
     );
   }
 }

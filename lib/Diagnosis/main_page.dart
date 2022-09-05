@@ -15,7 +15,8 @@ class QuestionPage extends GetView<QuestionController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuestionController>(
-      // init: QuestionController(),
+      // Initialization is mandatory here...
+      init: QuestionController(),
       builder: (QuestionController controller) {
         return DecoratedBox(
           decoration: Style.boxDecoration,
@@ -29,57 +30,57 @@ class QuestionPage extends GetView<QuestionController> {
             body: SafeArea(
               child: Form(
                 key: controller.formKey,
-                child: ListView(
-                  children: [
-                    FadeIn(
-                      delay: Duration(milliseconds: 200),
-                      // TODO: widget goes invisiblee
-                      animate: true,
-                      duration: Duration(milliseconds: 500),
-                      child: CustomCardWidget(
-                        widget: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                controller.displaySubTitle,
-                                textAlign: TextAlign.center,
-                                style: Style.headline6.copyWith(
-                                  fontSize: 18,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w600,
+                // Column widget to keep the error's without vanishing on scroll
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      FadeIn(
+                        delay: Duration(milliseconds: 200),
+                        // TODO: widget goes invisiblee
+                        animate: true,
+                        duration: Duration(milliseconds: 500),
+                        child: CustomCardWidget(
+                          widget: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                child: Text(
+                                  controller.displaySubTitle,
+                                  textAlign: TextAlign.center,
+                                  style: Style.headline6.copyWith(
+                                    fontSize: 18,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                            ...controller.displayComponents.map(
-                              (Component component) {
-                                return ComponentWidget(
-                                  e: component,
-                                  controller: controller,
-                                );
-                              },
-                            )
-                          ],
+                              ...controller.displayComponents.map(
+                                (Component component) {
+                                  return ComponentWidget(
+                                    e: component,
+                                    controller: controller,
+                                  );
+                                },
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    //CHECK THIS
-                    ...controller.displaySubcomponents.map(
-                      (SubComponent subcomponent) {
-                        return CustomDropDown(
-                          subcomponent,
-                          (response) {
-                            controller.updateSubcomponentResponse(
-                              subcomponent,
-                              response,
-                            );
-                          },
-                        );
-                      },
-                    )
-                    //  ??
-                    // [SizedBox.shrink()],
-                  ],
+                      ...controller.displaySubcomponents.map(
+                        (SubComponent subcomponent) {
+                          return CustomDropDown(
+                            subcomponent,
+                            (response) {
+                              controller.updateSubcomponentResponse(
+                                subcomponent,
+                                response,
+                              );
+                            },
+                          );
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -99,8 +100,8 @@ class QuestionPage extends GetView<QuestionController> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: BouncingButton(
           voidCallback: () async {
-            // if (controller.formKey.currentState!.validate()) {
-            if (true) {
+            if (controller.formKey.currentState!.validate()) {
+              // if (true) {
               controller.updateResponse().then(
                 (value) {
                   if (value) {

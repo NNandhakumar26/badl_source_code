@@ -110,10 +110,10 @@ class LoginPage extends GetView<LoginController> {
                                     controller.scaffoldKey.currentContext!);
                                 if (isNewUser != null) {
                                   if (isNewUser) {
-                                    Get.offAll(UserInfoPage());
-                                  } else if (!isNewUser) {
+                                    Style.navigate(context, UserInfoPage());
+                                  } else {
                                     await controller.setUID(false);
-                                    Get.offAll(FirstPage());
+                                    Style.navigate(context, FirstPage());
                                   }
                                 } else if (isNewUser == null) {
                                   controller.snackBar(

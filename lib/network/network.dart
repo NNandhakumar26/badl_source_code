@@ -12,11 +12,11 @@ class Network {
   static Future<void> addReportToDb(Map<String, dynamic> report) async {
     await reports.add(report).then(
       (value) async {
-        String doctorName = await Local.getUserName();
+        String? doctorName = await Local.getUserName();
         await reports.doc(value.id).update(
           {
             'reportId': value.id,
-            'userName': doctorName,
+            'userName': doctorName ?? 'No Name',
           },
         );
       },

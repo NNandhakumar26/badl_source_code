@@ -17,17 +17,7 @@ class PDFViewPage extends StatelessWidget {
     // await Network.addReportToDb(userInput.map(
     //     (key, value) => MapEntry(key, (value != null) ? value.toJson() : '')));
 
-    var temp;
-
-    await PdfPage().generate(userInput).then(
-      (value) {
-        print(value);
-        temp = value;
-      },
-    );
-    print('The value of temp is $temp');
-
-    return temp;
+    return await PdfPage().generate(userInput);
   }
 
   @override
@@ -35,9 +25,8 @@ class PDFViewPage extends StatelessWidget {
     return FutureBuilder(
       future: addUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print(snapshot.connectionState);
         if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data.toString());
+          print('*** Generated The PDF ***');
           return Scaffold(
             appBar: AppBar(
               leading: IconButton(
