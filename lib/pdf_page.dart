@@ -1,8 +1,8 @@
+import 'package:badl_app/Modals/question.dart';
+import 'package:badl_app/modals/question_set.dart';
 import 'package:badl_app/modals/patientInfo.dart';
 import 'package:badl_app/modals/preference.dart';
-import 'package:badl_app/modals/question_set.dart';
 import 'package:badl_app/network/shared_pereference.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -10,6 +10,7 @@ import 'package:printing/printing.dart';
 const PdfColor lightBlack = PdfColor.fromInt(0xff808080);
 const PdfColor lightGrey = PdfColor.fromInt(0xffF0EFEF);
 const sep = 120.0;
+List<Scoring> scoringList = [];
 
 class PdfPage {
   Future<dynamic> generate(Map<String, dynamic> data) async {
@@ -118,6 +119,13 @@ class PdfPage {
               ),
               pw.Column(
                 children: [
+                  masterScoringWidget(
+                    context,
+                    scoringListGenerator(
+                      data,
+                    ),
+                  ),
+                  pw.SizedBox(height: 8),
                   signatureWidget(
                     context,
                     name: name,
@@ -133,7 +141,7 @@ class PdfPage {
 
     for (var entry in data.entries) {
       if (entry.value.runtimeType == QuestionSet) {
-        Scoring scoring = entry.value.heading!.scoring!;
+        Scoring scoring = (entry.value as QuestionSet).heading!.scoring!;
         // print('object');
         // print(scoring.dependentPercent);
         // print(scoring.independent);
@@ -214,6 +222,17 @@ class PdfPage {
 
     print('Finished');
     return doc.save();
+  }
+
+  static List<Scoring> scoringListGenerator(Map value) {
+    List<Scoring> returnValue = [];
+    for (var questionset in value.entries) {
+      if (questionset.key == 'patientDetails')
+        continue;
+      else
+        returnValue.add((questionset.value as QuestionSet).heading!.scoring!);
+    }
+    return returnValue;
   }
 
   static pw.Container patientDetailsWidget({PatientDetails? details}) {
@@ -345,7 +364,9 @@ class PdfPage {
         (preference.components != null)
             ? pw.Column(
                 children: [
-                  ...preference.components!.map(
+                  ...preference.components!
+                      .where((element) => element.isChecked)
+                      .map(
                     (e) {
                       return pw.Container(
                         margin: pw.EdgeInsets.symmetric(vertical: 4),

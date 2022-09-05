@@ -1,6 +1,6 @@
 import 'package:badl_app/diagnosis/bouncing_widget.dart';
 import 'package:badl_app/diagnosis/first_page.dart';
-import 'package:badl_app/Login/login_controller.dart';
+import 'package:badl_app/login/login_controller.dart';
 import 'package:badl_app/modals/user.dart';
 import 'package:badl_app/network/network.dart';
 import 'package:badl_app/network/shared_pereference.dart';
