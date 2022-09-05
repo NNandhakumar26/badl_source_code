@@ -125,7 +125,7 @@ class PdfPage {
                       data,
                     ),
                   ),
-                  pw.SizedBox(height: 8),
+                  pw.SizedBox(height: 24),
                   signatureWidget(
                     context,
                     name: name,
@@ -247,61 +247,44 @@ class PdfPage {
         vertical: 12,
       ),
       child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.stretch,
         children: [
-          // pw.Center(
-          //   child: pw.Text(
-          //     'Demographic Data',
-          //     textScaleFactor: 1.5,
-          //   ),
-          // ),
-          // pw.SizedBox(height: 8),
-          pw.Row(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          pw.SizedBox(width: 16),
+          pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
             children: [
-              pw.SizedBox(width: 10),
-              pw.Column(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                children: [
-                  buildText(
-                    title: 'Age',
-                    value: (details?.months == null)
-                        ? '${details!.age} Years'
-                        : '${details!.age} Years, ${details.months} Months',
-                    width: 180,
-                  ),
-                  pw.SizedBox(
-                    height: 16,
-                  ),
-                  buildText(
-                    title: 'Gender',
-                    value: '${details.gender}',
-                    width: 180,
-                  ),
-                ],
+              buildText(
+                title: 'Age',
+                value: (details?.months == null)
+                    ? '${details!.age} Years'
+                    : '${details!.age} Years, ${details.months} Months',
               ),
-              pw.Column(
-                mainAxisAlignment: pw.MainAxisAlignment.start,
-                children: [
-                  buildText(
-                    title: 'Diagnosis',
-                    value: '${details.diagnosis}',
-                    width: 340,
-                  ),
-                  pw.SizedBox(
-                    height: 16,
-                  ),
-                  buildText(
-                    title: 'Any Orthoses / Prostheses',
-                    value: ((details.anyOrthosesOrProstheses) == true)
-                        ? 'Yes - (${details.nameOfTheDevice})'
-                        : 'No',
-                    width: 340,
-                  ),
-                ],
-              )
+              pw.SizedBox(
+                height: 8,
+              ),
+              buildText(
+                title: 'Gender',
+                value: '${details.gender}',
+              ),
+              pw.SizedBox(
+                height: 8,
+              ),
+              buildText(
+                title: 'Diagnosis',
+                value: '${details.diagnosis}',
+              ),
+              pw.SizedBox(
+                height: 8,
+              ),
+              buildText(
+                title: 'Any Orthoses / Prostheses',
+                value: ((details.anyOrthosesOrProstheses) == true)
+                    ? 'Yes - (${details.nameOfTheDevice})'
+                    : 'No',
+              ),
             ],
           ),
+          pw.SizedBox(width: 16),
         ],
       ),
     );
@@ -310,12 +293,11 @@ class PdfPage {
   static pw.Widget buildText({
     required String title,
     required String value,
-    double width = double.infinity,
     pw.TextStyle? titleStyle,
     bool unite = false,
   }) {
     return pw.Container(
-      width: width,
+      width: 400,
       padding: pw.EdgeInsets.all(6),
       child: pw.Row(
         children: [
@@ -496,10 +478,10 @@ class PdfPage {
     double percentCalculator(List<double> values) =>
         values.fold<double>(
             0.0, (previousValue, value) => previousValue + value) /
-        (scoringList.length * 100);
+        (scoringList.length);
 
     double actualScore = scoringList.fold(0.0,
-        (previousValue, scoring) => previousValue + (scoring.total ?? 0.0));
+        (previousValue, scoring) => previousValue + (scoring.relativeScore));
 
     return scoringLayout(
       [
